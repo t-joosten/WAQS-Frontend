@@ -1,13 +1,10 @@
 {
-  "name": "ngx-admin",
-  "version": "2.3.0",
+  "name": "waterquality-frontend",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/akveo/ngx-admin.git"
-  },
-  "bugs": {
-    "url": "https://github.com/akveo/ngx-admin/issues"
+    "url": "git+https://github.com/t-joosten/waterquality-frontend.git"
   },
   "browserslist": [
     "> 1%",
@@ -38,8 +35,8 @@
   "dependencies": {
     "@agm/core": "1.0.0-beta.2",
     "@angular/animations": "6.0.0",
-    "@angular/cli": "^6.2.4",
-    "@angular/compiler-cli": "^6.1.9",
+    "@angular/cli": "6.0.0",
+    "@angular/compiler-cli": "6.0.0",
     "@angular/common": "6.0.0",
     "@angular/compiler": "6.0.0",
     "@angular/core": "6.0.0",
