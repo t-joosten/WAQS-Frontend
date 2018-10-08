@@ -30,5 +30,5 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Apparaten',
     icon: 'nb-audio',
     link: '/pages/devices',
-  }
+  },
 ];

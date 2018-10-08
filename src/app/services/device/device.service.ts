@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Device} from '../../models/device.model';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -11,12 +10,12 @@ import 'rxjs/add/operator/do';
 const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DeviceService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
   ) {
   }
 
@@ -28,8 +27,8 @@ export class DeviceService {
     return this.http.get(`${API_URL}/devices/${deviceId}`);
   }
 
-  private handleError(error: Response | any) {
+  /*private handleError(error: Response | any) {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
-  }
+  }*/
 }

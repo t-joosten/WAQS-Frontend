@@ -3,8 +3,7 @@ import {NbThemeService} from '@nebular/theme';
 
 import {takeWhile} from 'rxjs/operators/takeWhile' ;
 import {MeasurementService} from '../../../services/measurement/measurement.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {DeviceService} from "../../../services/device/device.service";
+import {ActivatedRoute} from '@angular/router';
 
 interface CardSettings {
   title: string;
@@ -16,7 +15,7 @@ interface CardSettings {
 @Component({
   selector: 'ngx-details',
   templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss']
+  styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnDestroy {
 
@@ -62,7 +61,7 @@ export class DetailsComponent implements OnDestroy {
   };
 
   constructor(private themeService: NbThemeService, private measurementService: MeasurementService,
-              private deviceService: DeviceService, private router: Router, private route: ActivatedRoute) {
+              /*private deviceService: DeviceService, private router: Router,*/ private route: ActivatedRoute) {
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
       .subscribe(theme => {
@@ -71,9 +70,9 @@ export class DetailsComponent implements OnDestroy {
 
     this.route.params.subscribe(params => {
       const id = params['id'];
-      this.deviceService.getDevice(id).subscribe((device) => {
+      /*this.deviceService.getDevice(id).subscribe((device) => {
         console.log(device);
-      });
+      });*/
 
       this.measurementService.getMeasurements(id).subscribe((measurements) => {
 

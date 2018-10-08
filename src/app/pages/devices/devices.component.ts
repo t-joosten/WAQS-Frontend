@@ -7,7 +7,7 @@ import {Device} from '../../models/device.model';
   selector: 'ngx-devices',
   templateUrl: './devices.component.html',
   styleUrls: ['./devices.component.scss'],
-  providers: [DeviceService]
+  providers: [DeviceService],
 })
 export class DevicesComponent implements OnInit {
   devices: Device[] = [];
@@ -20,9 +20,9 @@ export class DevicesComponent implements OnInit {
       .getAllDevices()
       .subscribe(
         (devices) => {
-          console.log(devices);
+          // console.log(devices);
           this.devices = devices;
-        }
+        },
       );
   }
 

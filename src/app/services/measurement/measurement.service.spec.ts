@@ -5,7 +5,7 @@ import { MeasurementService } from './measurement.service';
 describe('MeasurementService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MeasurementService]
+      providers: [MeasurementService],
     });
   });
 

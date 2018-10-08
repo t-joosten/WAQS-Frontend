@@ -6,12 +6,12 @@ import {environment} from 'environments/environment';
 const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MeasurementService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
   ) {
   }
 
@@ -19,8 +19,8 @@ export class MeasurementService {
     return this.http.get(`${API_URL}/measurements/${deviceId}`);
   }
 
-  private handleError(error: Response | any) {
+  /*private handleError(error: Response | any) {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
-  }
+  }*/
 }
