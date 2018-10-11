@@ -25,14 +25,14 @@ export class DetailsComponent implements OnDestroy {
     title: 'Temperatuur',
     iconClass: 'nb-sunny',
     type: 'warning',
-    value: '-',
+    value: '23',
   };
 
   humidityCard: CardSettings = {
     title: 'Luchtvochtigheid',
     iconClass: 'nb-drop',
     type: 'info',
-    value: '-',
+    value: '44',
   };
   statusCards: string;
 
@@ -74,7 +74,7 @@ export class DetailsComponent implements OnDestroy {
         console.log(device);
       });*/
 
-      this.measurementService.getMeasurements(id).subscribe((measurements) => {
+      /*this.measurementService.getMeasurements(id).subscribe((measurements) => {
 
         const lastMeasurement = measurements[measurements.length - 1];
 
@@ -88,7 +88,7 @@ export class DetailsComponent implements OnDestroy {
         if (humidity !== undefined) {
           this.humidityCard.value = humidity;
         }
-      });
+      });*/
     });
   }
 
