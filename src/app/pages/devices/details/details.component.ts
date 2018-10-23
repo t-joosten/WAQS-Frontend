@@ -6,7 +6,7 @@ import {MeasurementService} from '../../../services/measurement/measurement.serv
 import {ActivatedRoute, Router} from '@angular/router';
 import {Device} from '../../../models/device.model';
 import {DeviceService} from '../../../services/device/device.service';
-import {Socket} from "ngx-socket-io";
+import {Socket} from 'ngx-socket-io';
 
 interface CardSettings {
   title: string;
@@ -58,7 +58,13 @@ export class DetailsComponent implements OnDestroy {
   constructor(private themeService: NbThemeService, private measurementService: MeasurementService,
               private deviceService: DeviceService, private router: Router, private route: ActivatedRoute,
               private socket: Socket) {
-    socket.emit('connection', 'banaan', (res) => {
+    socket.on('connection', function(socket){
+      socket.on('chat message', function(msg){
+        console.log('message: ' + msg);
+      });
+    });
+
+    this.socket.on('chat message', (res) => {
       console.log(res);
     });
 
