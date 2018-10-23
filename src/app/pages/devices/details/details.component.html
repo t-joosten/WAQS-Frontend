@@ -1,3 +1,16 @@
+<div class="row" *ngIf="outdated">
+  <div class="col">
+  <nb-card>
+    <nb-card-body>
+      <div class="alert alert-danger" role="alert" style="margin-bottom: 0px">
+        <strong>Sinds {{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss' }} is er geen nieuwe data
+          binnen gekomen.</strong>
+      </div>
+    </nb-card-body>
+  </nb-card>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-xxxl-3 col-md-6" *ngFor="let statusCard of statusCards">
     <ngx-status-card [title]="statusCard.title"

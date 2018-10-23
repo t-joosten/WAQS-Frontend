@@ -1,3 +1,4 @@
+(window as any).global = window;
 /**
  * @license
  * Copyright Akveo. All Rights Reserved.
