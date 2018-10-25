@@ -7,7 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Device} from '../../../models/device.model';
 import {DeviceService} from '../../../services/device/device.service';
 import {Socket} from 'ngx-socket-io';
-import { EChartOption } from 'echarts';
+import {EChartOption} from 'echarts';
 
 interface CardSettings {
   title: string;
@@ -29,16 +29,16 @@ export class DetailsComponent implements OnDestroy {
   chartOption: EChartOption = {
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
     },
     series: [{
       data: [820, 932, 901, 934, 1290, 1330, 1320],
-      type: 'line'
-    }]
-  }
+      type: 'line',
+    }],
+  };
 
   temperaturerCard: CardSettings = {
     title: 'Temperatuur',
@@ -57,7 +57,7 @@ export class DetailsComponent implements OnDestroy {
 
   commonStatusCardsSet: CardSettings[] = [
     this.temperaturerCard,
-    //this.humidityCard,
+    // this.humidityCard,
   ];
 
   statusCardsByThemes: {
@@ -71,16 +71,16 @@ export class DetailsComponent implements OnDestroy {
   };
 
   constructor(private themeService: NbThemeService, private measurementService: MeasurementService,
-              private deviceService: DeviceService, private router: Router, private route: ActivatedRoute,
+              private deviceService: DeviceService, private route: ActivatedRoute,
               private socket: Socket) {
-    socket.on('connection', function(socket){
-      socket.on('chat message', function(msg){
-        console.log('message: ' + msg);
+    socket.on('connection', function (res) {
+      res.on('chat message', function (msg) {
+        // console.log('message: ' + msg);
       });
     });
 
     this.socket.on('chat message', (res) => {
-      console.log(res);
+      // console.log(res);
     });
 
     this.themeService.getJsTheme()
@@ -108,7 +108,7 @@ export class DetailsComponent implements OnDestroy {
       this.checkIfDataOutdated(lastMeasurement);
 
       const temperature = lastMeasurement.values.Temperature;
-      //const humidity = lastMeasurement.values.Humidity;
+      // const humidity = lastMeasurement.values.Humidity;
 
       if (temperature !== undefined) {
         this.temperaturerCard.value = temperature;
