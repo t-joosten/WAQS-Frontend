@@ -11,6 +11,7 @@ import {DevicesComponent} from './devices.component';
 import {DetailsComponent} from './details/details.component';
 import {TemperatureComponent} from './details/temperature/temperature.component';
 import {StatusCardComponent} from './details/status-card/status-card.component';
+import {TemperatureGraphComponent} from './details/temperature-graph/temperature-graph';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {StatusCardComponent} from './details/status-card/status-card.component';
     DetailsComponent,
     TemperatureComponent,
     StatusCardComponent,
+    TemperatureGraphComponent,
   ],
 })
 export class DevicesModule {

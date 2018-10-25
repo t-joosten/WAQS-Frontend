@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Device} from '../../../models/device.model';
 import {DeviceService} from '../../../services/device/device.service';
 import {Socket} from 'ngx-socket-io';
+import { EChartOption } from 'echarts';
 
 interface CardSettings {
   title: string;
@@ -25,6 +26,20 @@ export class DetailsComponent implements OnDestroy {
   private alive = true;
   public device: Device = null;
 
+  chartOption: EChartOption = {
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [{
+      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      type: 'line'
+    }]
+  }
+
   temperaturerCard: CardSettings = {
     title: 'Temperatuur',
     iconClass: 'nb-sunny',
@@ -32,17 +47,17 @@ export class DetailsComponent implements OnDestroy {
     value: '-',
   };
 
-  humidityCard: CardSettings = {
+  /*humidityCard: CardSettings = {
     title: 'Luchtvochtigheid',
     iconClass: 'nb-drop',
     type: 'info',
     value: '-',
-  };
+  };*/
   statusCards: string;
 
   commonStatusCardsSet: CardSettings[] = [
     this.temperaturerCard,
-    this.humidityCard,
+    //this.humidityCard,
   ];
 
   statusCardsByThemes: {
@@ -80,32 +95,32 @@ export class DetailsComponent implements OnDestroy {
         this.device = device;
       });
 
-      this.updateMeasurementValues(id);
+      this.getLastMeasurementValue(id);
 
       setInterval(() => {
-        this.updateMeasurementValues(id);
+        this.getLastMeasurementValue(id);
       }, 3000);
     });
   }
 
-  private updateMeasurementValues(id) {
+  private getLastMeasurementValue(id) {
     this.measurementService.getLastMeasurement(id).subscribe((lastMeasurement) => {
-      this.checkDataOutdated(lastMeasurement);
+      this.checkIfDataOutdated(lastMeasurement);
 
       const temperature = lastMeasurement.values.Temperature;
-      const humidity = lastMeasurement.values.Humidity;
+      //const humidity = lastMeasurement.values.Humidity;
 
       if (temperature !== undefined) {
         this.temperaturerCard.value = temperature;
       }
 
-      if (humidity !== undefined) {
+      /*if (humidity !== undefined) {
         this.humidityCard.value = humidity;
-      }
+      }*/
     });
   }
 
-  private checkDataOutdated(lastMeasurement) {
+  private checkIfDataOutdated(lastMeasurement) {
     const lastUpdate = new Date(lastMeasurement.createdAt);
     const currentDate = new Date();
     const timeDiff = Math.abs(currentDate.getTime() - lastUpdate.getTime());
@@ -115,6 +130,7 @@ export class DetailsComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
+    this.socket.removeListener('chat message');
     this.alive = false;
   }
 }

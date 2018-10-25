@@ -12,7 +12,7 @@ const routes: Routes = [{
   path: '',
   component: PagesComponent,
   children: [{
-      path: 'devices',
+      path: '',
       component: DevicesComponent,
     },
     {
