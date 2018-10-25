@@ -89,9 +89,13 @@ export class DetailsComponent implements OnDestroy {
         this.statusCards = this.statusCardsByThemes[theme.name];
       });
 
-    this.route.params.subscribe(params => {
+    this.route.params
+      .pipe(takeWhile(() => this.alive))
+      .subscribe(params => {
       const id = params['id'];
-      this.deviceService.getDevice(id).subscribe((device) => {
+      this.deviceService.getDevice(id)
+        .pipe(takeWhile(() => this.alive))
+        .subscribe((device) => {
         this.device = device;
       });
 
@@ -104,7 +108,9 @@ export class DetailsComponent implements OnDestroy {
   }
 
   private getLastMeasurementValue(id) {
-    this.measurementService.getLastMeasurement(id).subscribe((lastMeasurement) => {
+    this.measurementService.getLastMeasurement(id)
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((lastMeasurement) => {
       this.checkIfDataOutdated(lastMeasurement);
 
       const temperature = lastMeasurement.values.Temperature;

@@ -12,7 +12,7 @@ const routes: Routes = [{
   path: '',
   component: PagesComponent,
   children: [{
-      path: '',
+      path: 'devices',
       component: DevicesComponent,
     },
     {
@@ -51,7 +51,7 @@ const routes: Routes = [{
       loadChildren: './miscellaneous/miscellaneous.module#MiscellaneousModule',
     }, {
       path: '',
-      redirectTo: 'devices',
+      redirectTo: 'dashboard',
       pathMatch: 'full',
     }, {
       path: '**',

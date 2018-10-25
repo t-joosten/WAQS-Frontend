@@ -6,7 +6,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'nb-home',
     link: '/pages/iot-dashboard',
   },
-  {
+  /*{
     title: 'Grafieken',
     icon: 'nb-bar-chart',
     link: '',
@@ -25,7 +25,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Waterschappen',
     icon: 'nb-drop',
     link: '',
-  },
+  },*/
   {
     title: 'Apparaten',
     icon: 'nb-audio',

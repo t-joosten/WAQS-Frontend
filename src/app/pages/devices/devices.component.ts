@@ -20,7 +20,6 @@ export class DevicesComponent implements OnInit {
       .getAllDevices()
       .subscribe(
         (devices) => {
-          // console.log(devices);
           this.devices = devices;
         },
       );
