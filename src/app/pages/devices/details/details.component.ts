@@ -3,7 +3,7 @@ import {NbThemeService} from '@nebular/theme';
 
 import {takeWhile} from 'rxjs/operators/takeWhile';
 import {MeasurementService} from '../../../services/measurement/measurement.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Device} from '../../../models/device.model';
 import {DeviceService} from '../../../services/device/device.service';
 import {Socket} from 'ngx-socket-io';
@@ -25,25 +25,19 @@ export class DetailsComponent implements OnDestroy {
   public outdated = false;
   private alive = true;
   public device: Device = null;
-
-  chartOption: EChartOption = {
-    xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [{
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
-      type: 'line',
-    }],
-  };
+  private lastMeasurementSubscription: any;
 
   temperaturerCard: CardSettings = {
     title: 'Temperatuur',
     iconClass: 'nb-sunny',
     type: 'warning',
+    value: '-',
+  };
+
+  pHCard: CardSettings = {
+    title: 'pH',
+    iconClass: 'nb-drop',
+    type: 'primary',
     value: '-',
   };
 
@@ -58,6 +52,7 @@ export class DetailsComponent implements OnDestroy {
   commonStatusCardsSet: CardSettings[] = [
     this.temperaturerCard,
     // this.humidityCard,
+    this.pHCard,
   ];
 
   statusCardsByThemes: {
@@ -92,38 +87,47 @@ export class DetailsComponent implements OnDestroy {
     this.route.params
       .pipe(takeWhile(() => this.alive))
       .subscribe(params => {
-      const id = params['id'];
-      this.deviceService.getDevice(id)
-        .pipe(takeWhile(() => this.alive))
-        .subscribe((device) => {
-        this.device = device;
-      });
+        const id = params['id'];
+        this.deviceService.getDevice(id)
+          .pipe(takeWhile(() => this.alive))
+          .subscribe((device) => {
+            this.device = device;
+          });
 
-      this.getLastMeasurementValue(id);
-
-      setInterval(() => {
         this.getLastMeasurementValue(id);
-      }, 3000);
-    });
+
+        setInterval(() => {
+          this.getLastMeasurementValue(id);
+        }, 3000);
+      });
   }
 
   private getLastMeasurementValue(id) {
-    this.measurementService.getLastMeasurement(id)
-      .pipe(takeWhile(() => this.alive))
-      .subscribe((lastMeasurement) => {
-      this.checkIfDataOutdated(lastMeasurement);
+    this.lastMeasurementSubscription = this.measurementService.getLastMeasurement(id)
+      .subscribe(
+        (lastMeasurement) => {
+          // console.log(this.device['_id'] + ' ' + lastMeasurement.device);
+            if (this.device['_id'] === lastMeasurement.device) {
 
-      const temperature = lastMeasurement.values.Temperature;
-      // const humidity = lastMeasurement.values.Humidity;
+              this.checkIfDataOutdated(lastMeasurement);
 
-      if (temperature !== undefined) {
-        this.temperaturerCard.value = temperature;
-      }
+              const temperature = lastMeasurement.values.Temperature;
+              const pH = lastMeasurement.values.pH;
+              // const humidity = lastMeasurement.values.Humidity;
 
-      /*if (humidity !== undefined) {
-        this.humidityCard.value = humidity;
-      }*/
-    });
+              if (temperature !== undefined) {
+                this.temperaturerCard.value = temperature;
+              }
+
+              if (pH !== undefined) {
+                this.pHCard.value = pH;
+              }
+
+              /*if (humidity !== undefined) {
+                this.humidityCard.value = humidity;
+              }*/
+            }
+        });
   }
 
   private checkIfDataOutdated(lastMeasurement) {
