@@ -6,4 +6,5 @@
 export const environment = {
   production: true,
   apiUrl: 'https://waterquality-backend.herokuapp.com/api/v1',
+  socketURL: 'https://waterquality-backend.herokuapp.com',
 };
