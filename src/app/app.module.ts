@@ -15,8 +15,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { ThemeModule } from './@theme/theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import {environment} from "../environments/environment";
 
-const config: SocketIoConfig = { url: 'http://localhost:4000', options: {} };
+const SOCKET_URL = environment.socketURL;
+
+const config: SocketIoConfig = { url: SOCKET_URL, options: {} };
 
 @NgModule({
   declarations: [AppComponent],

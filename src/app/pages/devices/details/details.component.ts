@@ -3,11 +3,10 @@ import {NbThemeService} from '@nebular/theme';
 
 import {takeWhile} from 'rxjs/operators/takeWhile';
 import {MeasurementService} from '../../../services/measurement/measurement.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Device} from '../../../models/device.model';
 import {DeviceService} from '../../../services/device/device.service';
 import {Socket} from 'ngx-socket-io';
-import {EChartOption} from 'echarts';
 
 interface CardSettings {
   title: string;
@@ -25,6 +24,8 @@ export class DetailsComponent implements OnDestroy {
   public outdated = false;
   private alive = true;
   public device: Device = null;
+  public measurementData: any;
+  public isDataAvailable:boolean = false;
   private lastMeasurementSubscription: any;
 
   temperaturerCard: CardSettings = {
@@ -88,6 +89,8 @@ export class DetailsComponent implements OnDestroy {
       .pipe(takeWhile(() => this.alive))
       .subscribe(params => {
         const id = params['id'];
+        this.getMeasurementData(id);
+
         this.deviceService.getDevice(id)
           .pipe(takeWhile(() => this.alive))
           .subscribe((device) => {
@@ -107,27 +110,37 @@ export class DetailsComponent implements OnDestroy {
       .subscribe(
         (lastMeasurement) => {
           // console.log(this.device['_id'] + ' ' + lastMeasurement.device);
-            if (this.device['_id'] === lastMeasurement.device) {
+          if (this.device['_id'] === lastMeasurement.device) {
 
-              this.checkIfDataOutdated(lastMeasurement);
+            this.checkIfDataOutdated(lastMeasurement);
 
-              const temperature = lastMeasurement.values.Temperature;
-              const pH = lastMeasurement.values.pH;
-              // const humidity = lastMeasurement.values.Humidity;
+            const temperature = lastMeasurement.values.Temperature;
+            const pH = lastMeasurement.values.pH;
+            // const humidity = lastMeasurement.values.Humidity;
 
-              if (temperature !== undefined) {
-                this.temperaturerCard.value = temperature;
-              }
-
-              if (pH !== undefined) {
-                this.pHCard.value = pH;
-              }
-
-              /*if (humidity !== undefined) {
-                this.humidityCard.value = humidity;
-              }*/
+            if (temperature !== undefined) {
+              this.temperaturerCard.value = temperature;
             }
+
+            if (pH !== undefined) {
+              this.pHCard.value = pH;
+            }
+
+            /*if (humidity !== undefined) {
+              this.humidityCard.value = humidity;
+            }*/
+          }
         });
+  }
+
+  private getMeasurementData(id) {
+    this.measurementService.getMeasurements(id)
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((measurements) => {
+          this.measurementData = measurements;
+          //console.log(measurements);
+          this.isDataAvailable = true;
+      });
   }
 
   private checkIfDataOutdated(lastMeasurement) {
