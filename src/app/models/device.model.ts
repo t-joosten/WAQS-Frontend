@@ -3,6 +3,8 @@ export class Device {
   appId: string;
   devId: string;
   hardwareSerial: string;
+  lat: Number;
+  long: Number;
   createdAt: Date;
   updatedAt: Date;
 

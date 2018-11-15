@@ -7,6 +7,7 @@ import {PagesRoutingModule} from './pages-routing.module';
 import {ThemeModule} from '../@theme/theme.module';
 import {MiscellaneousModule} from './miscellaneous/miscellaneous.module';
 import {DevicesModule} from './devices/devices.module';
+import {InfoModule} from './info/info.module';
 
 const PAGES_COMPONENTS = [
   PagesComponent,
@@ -20,6 +21,7 @@ const PAGES_COMPONENTS = [
     ECommerceModule,
     MiscellaneousModule,
     DevicesModule,
+    InfoModule,
   ],
   declarations: [
     ...PAGES_COMPONENTS,
