@@ -1,4 +1,5 @@
 export class Device {
+  _id: string;
   name: string;
   appId: string;
   devId: string;

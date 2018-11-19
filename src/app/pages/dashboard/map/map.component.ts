@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {DeviceService} from "../../../services/device/device.service";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Device} from '../../../models/device.model';
 
 @Component({
   selector: 'ngx-map',
@@ -10,17 +10,21 @@ export class MapComponent implements OnInit {
   @ViewChild('gmap') gmapElement: any;
   map: google.maps.Map;
 
-  constructor(private deviceService: DeviceService) {
+  @Output() onSelectDevice = new EventEmitter<Device>();
+  selectedDevice: Device;
+
+  @Input() devices: Device[];
+
+  selectDevice(device: Device) {
+    this.onSelectDevice.emit(device);
+  }
+
+  constructor() {
   }
 
   ngOnInit() {
     this.initializeMap();
-
-    this.deviceService.getAllDevices().subscribe((devices) => {
-      this.initializeDeviceMarkers(devices);
-    }, (err) => {
-      console.log('Devices could not be retrieved');
-    });
+    this.initializeDeviceMarkers(this.devices);
   }
 
   initializeMap = () => {
@@ -48,10 +52,16 @@ export class MapComponent implements OnInit {
       },
       zIndex: 10000
     });
+
+    marker.addListener('click', () => {
+      this.selectedDevice = device;
+      this.selectDevice(this.selectedDevice);
+      console.log(this.selectedDevice);
+    });
   }
 
   initializeDeviceMarkers(devices) {
-    for (let i = 0; i < devices.length; i++) {
+    for (let i = 0; i < 2 /*devices.length*/; i++) {
       this.createDeviceMarker(devices[i]);
     }
   }
