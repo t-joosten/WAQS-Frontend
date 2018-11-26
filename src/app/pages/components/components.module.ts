@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 
-import { TreeModule } from 'angular-tree-component';
-import { ToasterModule } from 'angular2-toaster';
+import {TreeModule} from 'angular-tree-component';
+import {ToasterModule} from 'angular2-toaster';
 
-import { ThemeModule } from '../../@theme/theme.module';
-import { ComponentsRoutingModule, routedComponents } from './components-routing.module';
+import {ThemeModule} from '../../@theme/theme.module';
+import {ComponentsRoutingModule, routedComponents} from './components-routing.module';
 
 @NgModule({
   imports: [
@@ -17,4 +17,5 @@ import { ComponentsRoutingModule, routedComponents } from './components-routing.
     ...routedComponents,
   ],
 })
-export class ComponentsModule { }
+export class ComponentsModule {
+}

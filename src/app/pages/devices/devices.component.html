@@ -1,29 +1,17 @@
 <div class="row">
   <div class="col-md-3 col-xs-12" *ngFor="let device of devices">
-    <nb-card [routerLink]="device.id">
+    <nb-card [routerLink]="device._id">
       <nb-card-header>
         {{ device.name }}
       </nb-card-header>
       <nb-card-body>
         <div class="mb-2">
-          <span>App ID:</span><br>
-          <span class="value">{{ device.appId }}</span>
+          <p class="type">App ID</p>
+          <p class="value">{{ device.appId }}</p>
         </div>
         <div class="mb-2">
-          <span>Device ID:</span><br>
-          <span class="value">{{ device.devId }}</span>
-        </div>
-        <div class="mb-2">
-          <span>Hardware Serial:</span><br>
-          <span class="value">{{ device.hardwareSerial }}</span>
-        </div>
-        <div class="mb-2">
-          <span>Aangemaakt:</span><br>
-          <span class="value">{{ device.createdAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss'}}</span>
-        </div>
-        <div>
-          <span>Laatst Aangepast:</span><br>
-          <span class="value">{{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss'}}</span>
+          <p class="type">Device ID</p>
+          <p class="value">{{ device.devId }}</p>
         </div>
       </nb-card-body>
     </nb-card>

@@ -39,7 +39,7 @@ export class MapComponent implements OnInit {
   createDeviceMarker = (device) => {
     const marker = new google.maps.Marker({
       map: this.map,
-      position: {lat: 51.7076474, lng: 5.2801534},
+      position: {lat: device.lat, lng: device.long},
       icon: {
         strokeColor: '#000',
         strokeOpacity: 0.4,
@@ -53,9 +53,26 @@ export class MapComponent implements OnInit {
       zIndex: 10000
     });
 
+    const deviceName = device.name !== undefined ? device.name : device.devId;
+    const latitude = device.lat !== undefined ? device.lat : 0;
+    const longitude = device.long !== undefined ? device.long : 0;
+
+    const contentString = `` +
+      `<div class="text-left" style="padding-right: 15px;">` +
+      `<h5><a href="/#/pages/devices/${device._id}">${deviceName}</a></h5>` +
+      `<p>Latitude: ${latitude}</p>` +
+      `<p>Longitude: ${longitude}</p>` +
+      `</div>`;
+
+    const infowindow = new google.maps.InfoWindow({
+      content: contentString
+    });
+
     marker.addListener('click', () => {
       this.selectedDevice = device;
       this.selectDevice(this.selectedDevice);
+
+      infowindow.open(this.map, marker);
       console.log(this.selectedDevice);
     });
   }

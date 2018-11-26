@@ -7,9 +7,18 @@ import {Device} from '../../../models/device.model';
   styleUrls: ['./sensor-values.component.scss'],
   template: `
     <div class="row" *ngIf="selectedDevice && lastMeasurementLoaded">
-      <div *ngFor="let key of objectKeys(lastMeasurement.values)" class="col-md-4">
+      <div class="col-md-4" *ngFor="let key of objectKeys(lastMeasurement.values)">
         <nb-card>
-          <div>{{ key }}: {{lastMeasurement.values[key]}}</div>
+          <div class="icon-container">
+            <div class="icon warning">
+              <i class="nb-sunny"></i>
+            </div>
+          </div>
+
+          <div class="details">
+            <div class="title">{{ key }}</div>
+            <div class="status">{{lastMeasurement.values[key]}}</div>
+          </div>
         </nb-card>
       </div>
     </div>
