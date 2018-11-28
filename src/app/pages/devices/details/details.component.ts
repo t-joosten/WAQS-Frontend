@@ -138,7 +138,7 @@ export class DetailsComponent implements OnDestroy {
       .pipe(takeWhile(() => this.alive))
       .subscribe((measurements) => {
           this.measurementData = measurements;
-          //console.log(measurements);
+          console.log(measurements);
           this.isDataAvailable = true;
       });
   }
