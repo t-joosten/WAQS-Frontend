@@ -37,6 +37,7 @@ export class MapComponent implements OnInit {
   }
 
   createDeviceMarker = (device) => {
+    console.log(device);
     const marker = new google.maps.Marker({
       map: this.map,
       position: {lat: device.lat, lng: device.long},

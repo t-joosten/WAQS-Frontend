@@ -1,3 +1,9 @@
+<nb-card>
+  <nb-card-header class="text-center">
+    <h1>Apparaten</h1>
+  </nb-card-header>
+</nb-card>
+
 <div class="row">
   <div class="col-md-3 col-xs-12" *ngFor="let device of devices">
     <nb-card [routerLink]="device._id">
