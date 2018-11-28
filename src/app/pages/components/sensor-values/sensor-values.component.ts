@@ -39,7 +39,6 @@ export class SensorValuesComponent implements OnInit, OnChanges {
       .subscribe(
         (lastMeasurement) => {
           this.lastMeasurement = lastMeasurement;
-          console.log(lastMeasurement);
           this.lastMeasurementLoaded = true;
         });
   }

@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {NbThemeService} from '@nebular/theme';
 
 import {takeWhile} from 'rxjs/operators/takeWhile';
@@ -21,7 +21,7 @@ interface CardSettings {
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
 })
-export class DetailsComponent implements OnDestroy {
+export class DetailsComponent implements OnDestroy, OnInit {
   public outdated = false;
   private alive = true;
   public device: Device = null;
@@ -68,38 +68,7 @@ export class DetailsComponent implements OnDestroy {
   constructor(private themeService: NbThemeService, private measurementService: MeasurementService,
               private deviceService: DeviceService, private route: ActivatedRoute,
               private socket: Socket) {
-    socket.on('connection', function (res) {
-      res.on('chat message', function (msg) {
-        // console.log('message: ' + msg);
-      });
-    });
 
-    this.socket.on('chat message', (res) => {
-      // console.log(res);
-    });
-
-    this.themeService.getJsTheme()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(theme => {
-        this.statusCards = this.statusCardsByThemes[theme.name];
-      });
-
-    this.route.params
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(params => {
-        const id = params['id'];
-        this.deviceService.getDevice(id)
-          .pipe(takeWhile(() => this.alive))
-          .subscribe((device) => {
-            this.device = device;
-          });
-
-        this.getLastMeasurementValue(id);
-
-        setInterval(() => {
-          this.getLastMeasurementValue(id);
-        }, 3000);
-      });
   }
 
   private getLastMeasurementValue(id) {
@@ -142,5 +111,40 @@ export class DetailsComponent implements OnDestroy {
   ngOnDestroy() {
     this.socket.removeListener('chat message');
     this.alive = false;
+  }
+
+  ngOnInit(): void {
+    this.socket.on('connection', function (res) {
+      res.on('chat message', function (msg) {
+        // console.log('message: ' + msg);
+      });
+    });
+
+    this.socket.on('chat message', (res) => {
+      // console.log(res);
+    });
+
+    this.themeService.getJsTheme()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe(theme => {
+        this.statusCards = this.statusCardsByThemes[theme.name];
+      });
+
+    this.route.params
+      .pipe(takeWhile(() => this.alive))
+      .subscribe(params => {
+        const id = params['id'];
+        this.deviceService.getDevice(id)
+          .pipe(takeWhile(() => this.alive))
+          .subscribe((device) => {
+            this.device = device;
+          });
+
+        this.getLastMeasurementValue(id);
+
+        setInterval(() => {
+          this.getLastMeasurementValue(id);
+        }, 3000);
+      });
   }
 }
