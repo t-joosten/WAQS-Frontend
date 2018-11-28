@@ -12,5 +12,5 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:4000/api/v1',
   socketURL: 'http://localhost:4000',
-  googleMapsKey: 'AIzaSyBrvmFtGdFvNuUoSD24kIyWkUpCpNyCEmE ',
+  googleMapsKey: 'AIzaSyCEuXuq20j8Ud6D-wm1rCZnp3JfjGnA19I',
 };
