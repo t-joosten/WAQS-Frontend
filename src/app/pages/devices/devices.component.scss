@@ -1,5 +1,11 @@
 @import '../../@theme/styles/themes';
 
+.type {
+  font-size: 1em;
+  font-weight: bold;
+  border-bottom: 1px solid #ebeff5;
+}
+
 .value {
-  color: nb-theme(color-fg);
+  font-size: 1em;
 }

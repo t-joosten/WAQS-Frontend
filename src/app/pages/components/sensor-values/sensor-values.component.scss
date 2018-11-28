@@ -1,5 +1,5 @@
-@import '../../../../@theme/styles/themes';
-@import '~@nebular/theme/styles/global/bootstrap/hero-buttons';
+@import '../../../@theme/styles/themes';
+@import '../../../../../node_modules/@nebular/theme/styles/global/bootstrap/hero-buttons';
 
 @include nb-install-component() {
   nb-card {
@@ -14,15 +14,15 @@
 
     .icon-container {
       height: 100%;
-      padding: 0.625rem;
+      padding: 0;
     }
 
     .icon {
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       width: 5.75rem;
-      height: 100%;
       font-size: 3.75rem;
       border-radius: nb-theme(card-border-radius);
       transition: width 0.4s ease;
@@ -133,7 +133,7 @@
     }
 
     .status {
-      font-size: 2rem;
+      font-size: 1.6rem;
       font-weight: nb-theme(font-weight-light);
       text-transform: uppercase;
       color: nb-theme(card-fg);
@@ -158,7 +158,7 @@
 
       .icon {
         width: 7rem;
-        height: 100%;
+        height: 100% !important;
         font-size: 4.5rem;
         @include nb-ltr(border-radius, nb-theme(card-border-radius) 0 0 nb-theme(card-border-radius));
         @include nb-rtl(border-radius, 0 nb-theme(card-border-radius) nb-theme(card-border-radius) 0);

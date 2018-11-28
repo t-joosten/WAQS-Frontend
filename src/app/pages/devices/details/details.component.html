@@ -1,35 +1,66 @@
-<div *ngIf="isDataAvailable">
-  <div class="row" *ngIf="outdated">
-    <div class="col">
-      <nb-card>
-        <nb-card-body>
-          <div class="alert alert-danger" role="alert" style="margin-bottom: 0px">
-            <strong>Sinds {{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss' }} is er geen nieuwe
-              data
-              binnen gekomen.</strong>
-          </div>
-        </nb-card-body>
-      </nb-card>
-    </div>
-  </div>
+<div *ngIf="device">
+  <nb-card>
+    <nb-card-header class="text-center">
+      <h1>{{ device.name }}</h1>
+    </nb-card-header>
+  </nb-card>
 
-  <div class="row">
-    <div class="col-xxxl-3 col-md-6" *ngFor="let statusCard of statusCards">
-      <ngx-status-card [title]="statusCard.title"
-                       [type]="statusCard.type" [value]="statusCard.value">
-        <i [ngClass]="statusCard.iconClass"></i>
-      </ngx-status-card>
-    </div>
-  </div>
+  <nb-card>
+    <nb-card-body>
+      <div class="alert alert-danger" role="alert" style="margin-bottom: 0px">
+        <strong>Sinds {{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss' }} is er geen nieuwe data
+          binnen gekomen.</strong>
+      </div>
+    </nb-card-body>
+  </nb-card>
 
-  <div class="row">
-    <div class="col-md-12">
-      <nb-card>
-        <nb-card-body>
-          <ngx-temperature-graph [data]="measurementData"></ngx-temperature-graph>
-        </nb-card-body>
-      </nb-card>
-    </div>
-  </div>
+  <nb-card>
+    <nb-card-body>
+      <ngx-sensor-values *ngIf="device" [selectedDevice]="device"></ngx-sensor-values>
+    </nb-card-body>
+  </nb-card>
 
+  <nb-card>
+    <nb-card-body>
+      <ngx-sensor-graphs></ngx-sensor-graphs>
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card>
+    <nb-card-header>
+      Apparaat details
+    </nb-card-header>
+    <nb-card-body>
+      <div class="row">
+        <div class="col-md-4 mb-2">
+          <p class="type">App ID</p>
+          <p class="value">{{ device.appId }}</p>
+        </div>
+        <div class="col-md-4 mb-2">
+          <p class="type">Device ID</p>
+          <p class="value">{{ device.devId }}</p>
+        </div>
+        <div class="col-md-4 mb-2">
+          <p class="type">Hardware Serial</p>
+          <p class="value">{{ device.hardwareSerial }}</p>
+        </div>
+        <div class="col-md-4 mb-2">
+          <p class="type">Latitude</p>
+          <p class="value">{{ device.lat }}</p>
+        </div>
+        <div class="col-md-4 mb-2">
+          <p class="type">Longitude</p>
+          <p class="value">{{ device.long }}</p>
+        </div>
+        <div class="col-md-4 mb-2">
+          <p class="type">Aangemaakt</p>
+          <p class="value">{{ device.createdAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss'}}</p>
+        </div>
+        <div class="col-md-4 ">
+          <p class="type">Laatst Aangepast</p>
+          <p class="value">{{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss'}}</p>
+        </div>
+      </div>
+    </nb-card-body>
+  </nb-card>
 </div>
