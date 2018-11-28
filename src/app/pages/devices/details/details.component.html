@@ -4,7 +4,7 @@
       <h1>{{ device.name }}</h1>
     </nb-card-header>
   </nb-card>
-
+<!--
   <nb-card>
     <nb-card-body>
       <div class="alert alert-danger" role="alert" style="margin-bottom: 0px">
@@ -13,10 +13,10 @@
       </div>
     </nb-card-body>
   </nb-card>
-
+-->
   <nb-card>
     <nb-card-body>
-      <ngx-sensor-values *ngIf="device" [selectedDevice]="device"></ngx-sensor-values>
+      <ngx-sensor-values [selectedDevice]="device"></ngx-sensor-values>
     </nb-card-body>
   </nb-card>
 
@@ -25,7 +25,13 @@
       <ngx-sensor-graphs></ngx-sensor-graphs>
     </nb-card-body>
   </nb-card>
-
+<!--
+  <nb-card>
+    <nb-card-body>
+      <ngx-sensor-tables [selectedDevice]="device"></ngx-sensor-tables>
+    </nb-card-body>
+  </nb-card>
+-->
   <nb-card>
     <nb-card-header>
       Apparaat details

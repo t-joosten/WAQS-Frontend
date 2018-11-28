@@ -14,6 +14,7 @@ import {StatusCardComponent} from './details/status-card/status-card.component';
 import {TemperatureGraphComponent} from './details/temperature-graph/temperature-graph';
 import {SensorValuesModule} from '../components/sensor-values/sensor-values.module';
 import {SensorGraphsModule} from '../components/sensor-graphs/sensor-graphs.module';
+import {SensorTablesModule} from '../components/sensor-tables/sensor-tables.module';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import {SensorGraphsModule} from '../components/sensor-graphs/sensor-graphs.modu
     RouterModule,
     SensorValuesModule,
     SensorGraphsModule,
+    SensorTablesModule
   ],
   declarations: [
     DevicesComponent,
