@@ -1,5 +1,6 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import { NbThemeService } from '@nebular/theme';
+import {Component, AfterViewInit, OnDestroy, Input} from '@angular/core';
+import {NbThemeService} from '@nebular/theme';
+import {now} from "moment";
 
 @Component({
   selector: 'ngx-temperature-graph',
@@ -9,156 +10,90 @@ export class TemperatureGraphComponent implements AfterViewInit, OnDestroy {
   options: any = {};
   themeSubscription: any;
 
+  @Input() data: any;
+
   constructor(private theme: NbThemeService) {
   }
 
   ngAfterViewInit() {
     this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
 
-      const colors: any = config.variables;
-      const echarts: any = config.variables.echarts;
+      console.log(this.data);
+
+      let temperatures = [];
+      let dates = [];
+      let dataFormatted = []
+
+      for (let i = 0; i < this.data.length - 1; i++) {
+        let date = new Date(this.data[i].createdAt);
+        temperatures.push(this.data[i].values['Temperature']);
+        dates.push(date);
+
+        let name = date.toString();
+        let value = [
+          [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/'),
+          this.data[i].values['Temperature']
+        ];
+
+        console.log(`name: ${name}`);
+        console.log(`value: ${value}`);
+
+        dataFormatted.push({
+          name: name,
+          value: [
+            [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/'),
+            this.data[i].values['Temperature']
+          ]
+        });
+      }
+
+      var now = +new Date(1997, 9, 3);
+      var oneDay = 24 * 3600 * 1000;
+      var value = Math.random() * 1000;
 
       this.options = {
-        backgroundColor: echarts.bg,
-        color: [colors.success, colors.info],
+        title: {
+          text: 'Temperatuur'
+        },
         tooltip: {
-          trigger: 'none',
+          trigger: 'axis',
+          formatter: function (params) {
+            params = params[0];
+            var date = new Date(params.name);
+            return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+          },
           axisPointer: {
-            type: 'cross',
-          },
+            animation: false
+          }
         },
-        legend: {
-          data: ['2015 Precipitation', '2016 Precipitation'],
-          textStyle: {
-            color: echarts.textColor,
-          },
+        xAxis: {
+          type: 'time',
+          splitLine: {
+            show: false
+          }
         },
-        grid: {
-          top: 70,
-          bottom: 50,
+        yAxis: {
+          type: 'value',
+          boundaryGap: [0, '100%'],
+          splitLine: {
+            show: false
+          }
         },
-        xAxis: [
-          {
-            type: 'category',
-            axisTick: {
-              alignWithLabel: true,
-            },
-            axisLine: {
-              onZero: false,
-              lineStyle: {
-                color: colors.info,
-              },
-            },
-            axisLabel: {
-              textStyle: {
-                color: echarts.textColor,
-              },
-            },
-            axisPointer: {
-              label: {
-                formatter: params => {
-                  return (
-                    'Precipitation  ' + params.value + (params.seriesData.length ? '：' + params.seriesData[0].data : '')
-                  );
-                },
-              },
-            },
-            data: [
-              '2016-1',
-              '2016-2',
-              '2016-3',
-              '2016-4',
-              '2016-5',
-              '2016-6',
-              '2016-7',
-              '2016-8',
-              '2016-9',
-              '2016-10',
-              '2016-11',
-              '2016-12',
-            ],
-          },
-          {
-            type: 'category',
-            axisTick: {
-              alignWithLabel: true,
-            },
-            axisLine: {
-              onZero: false,
-              lineStyle: {
-                color: colors.success,
-              },
-            },
-            axisLabel: {
-              textStyle: {
-                color: echarts.textColor,
-              },
-            },
-            axisPointer: {
-              label: {
-                formatter: params => {
-                  return (
-                    'Precipitation  ' + params.value + (params.seriesData.length ? '：' + params.seriesData[0].data : '')
-                  );
-                },
-              },
-            },
-            data: [
-              '2015-1',
-              '2015-2',
-              '2015-3',
-              '2015-4',
-              '2015-5',
-              '2015-6',
-              '2015-7',
-              '2015-8',
-              '2015-9',
-              '2015-10',
-              '2015-11',
-              '2015-12',
-            ],
-          },
-        ],
-        yAxis: [
-          {
-            type: 'value',
-            axisLine: {
-              lineStyle: {
-                color: echarts.axisLineColor,
-              },
-            },
-            splitLine: {
-              lineStyle: {
-                color: echarts.splitLineColor,
-              },
-            },
-            axisLabel: {
-              textStyle: {
-                color: echarts.textColor,
-              },
-            },
-          },
-        ],
-        series: [
-          {
-            name: '2015 Precipitation',
-            type: 'line',
-            xAxisIndex: 1,
-            smooth: true,
-            data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-          },
-          {
-            name: '2016 Precipitation',
-            type: 'line',
-            smooth: true,
-            data: [3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7],
-          },
-        ],
+        series: [{
+          name: '模拟数据',
+          type: 'line',
+          showSymbol: false,
+          hoverAnimation: false,
+          data: dataFormatted
+        }]
       };
+
     });
   }
 
   ngOnDestroy(): void {
     this.themeSubscription.unsubscribe();
   }
+
+  
 }
