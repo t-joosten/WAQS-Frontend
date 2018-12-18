@@ -1,12 +1,12 @@
-import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {NbAuthJWTToken, NbAuthModule, NbPasswordAuthStrategy} from '@nebular/auth';
-import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
-import { of as observableOf } from 'rxjs';
+import {NbSecurityModule, NbRoleProvider} from '@nebular/security';
+import {of as observableOf} from 'rxjs';
 
-import { throwIfAlreadyLoaded } from './module-import-guard';
-import { DataModule } from './data/data.module';
-import { AnalyticsService } from './utils/analytics.service';
+import {throwIfAlreadyLoaded} from './module-import-guard';
+import {DataModule} from './data/data.module';
+import {AnalyticsService} from './utils/analytics.service';
 
 import {environment} from '../../environments/environment';
 
@@ -59,10 +59,35 @@ export const NB_CORE_PROVIDERS = [
         token: {
           class: NbAuthJWTToken,
           key: 'token',
-        }
+        },
       }),
     ],
-    forms: {},
+    forms: {
+      login: {
+        redirectDelay: 10, // delay before redirect after a successful login, while success message is shown to the user
+        strategy: 'email',  // strategy id key.
+        rememberMe: true,   // whether to show or not the `rememberMe` checkbox
+        showMessages: {     // show/not show success/error messages
+          success: true,
+          error: true,
+        }
+      },
+      validation: {
+        password: {
+          required: true,
+          minLength: 8,
+          maxLength: 50,
+        },
+        email: {
+          required: true,
+        },
+        fullName: {
+          required: true,
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+    },
   }).providers,
 
   NbSecurityModule.forRoot({
@@ -71,7 +96,7 @@ export const NB_CORE_PROVIDERS = [
         view: [],
       },
       user: {
-        view: ['dashboard'],
+        view: ['user-menu'],
         parent: 'guest',
         menu: ['dashboard', 'devices', 'information']
       },

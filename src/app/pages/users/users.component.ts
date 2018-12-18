@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../../services/user/user.service";
 import {ToastrService} from "ngx-toastr";
+import {NbAuthJWTToken, NbAuthService} from "@nebular/auth";
 
 @Component({
   selector: 'ngx-users',
@@ -14,9 +15,18 @@ export class UsersComponent implements OnInit {
   public pages : number = 1;
   public countUsers: number = 0;
 
-  constructor(private userService: UserService, private toastr: ToastrService) { }
+  public currentUser: any;
+
+  constructor(private userService: UserService, private toastr: ToastrService, private authService: NbAuthService) { }
 
   ngOnInit() {
+    this.authService.onTokenChange()
+      .subscribe((token: NbAuthJWTToken) => {
+        if (token.isValid()) {
+          this.currentUser = token.getPayload();
+        }
+      });
+
     this.getUsers();
   }
 

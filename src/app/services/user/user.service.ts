@@ -18,7 +18,7 @@ export class UserService {
     this.authService.onTokenChange()
       .subscribe((token: NbAuthJWTToken) => {
         if (token.isValid()) {
-          this.token = token.toString().replace("JWT ", "");
+          this.token = token.toString();
         } else {
           this.token = null;
         }
