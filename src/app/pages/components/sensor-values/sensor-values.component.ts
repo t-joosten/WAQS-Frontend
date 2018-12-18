@@ -6,7 +6,7 @@ import {Device} from '../../../models/device.model';
   selector: 'ngx-sensor-values',
   styleUrls: ['./sensor-values.component.scss'],
   template: `
-    <div class="row" *ngIf="selectedDevice && lastMeasurementLoaded">
+    <div class="row" *ngIf="selectedDevice && lastMeasurementLoaded && lastMeasurement">
       <div class="col-md-4" *ngFor="let key of objectKeys(lastMeasurement.values)">
         <nb-card>
           <div class="icon-container">

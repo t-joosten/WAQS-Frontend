@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {NbThemeService} from '@nebular/theme';
+import {NbThemeService } from '@nebular/theme';
 
 import {takeWhile} from 'rxjs/operators/takeWhile';
 import {MeasurementService} from '../../../services/measurement/measurement.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Device} from '../../../models/device.model';
 import {DeviceService} from '../../../services/device/device.service';
 import {Socket} from 'ngx-socket-io';
@@ -26,6 +26,9 @@ export class DetailsComponent implements OnDestroy, OnInit {
   private alive = true;
   public device: Device = null;
   private lastMeasurementSubscription: any;
+  private index: number = 0;
+
+  public isEditingName = false;
 
   temperaturerCard: CardSettings = {
     title: 'Temperatuur',
@@ -66,8 +69,8 @@ export class DetailsComponent implements OnDestroy, OnInit {
   };
 
   constructor(private themeService: NbThemeService, private measurementService: MeasurementService,
-              private deviceService: DeviceService, private route: ActivatedRoute,
-              private socket: Socket) {
+              private deviceService: DeviceService, private route: ActivatedRoute, private router: Router,
+              private socket: Socket, ) {
 
   }
 
@@ -76,26 +79,26 @@ export class DetailsComponent implements OnDestroy, OnInit {
       .subscribe(
         (lastMeasurement) => {
           // console.log(this.device['_id'] + ' ' + lastMeasurement.device);
-            if (this.device['_id'] === lastMeasurement.device) {
+          if (this.device['_id'] === lastMeasurement.device) {
 
-              this.checkIfDataOutdated(lastMeasurement);
+            this.checkIfDataOutdated(lastMeasurement);
 
-              const temperature = lastMeasurement.values.Temperature;
-              const pH = lastMeasurement.values.pH;
-              // const humidity = lastMeasurement.values.Humidity;
+            const temperature = lastMeasurement.values.Temperature;
+            const pH = lastMeasurement.values.pH;
+            // const humidity = lastMeasurement.values.Humidity;
 
-              if (temperature !== undefined) {
-                this.temperaturerCard.value = temperature;
-              }
-
-              if (pH !== undefined) {
-                this.pHCard.value = pH;
-              }
-
-              /*if (humidity !== undefined) {
-                this.humidityCard.value = humidity;
-              }*/
+            if (temperature !== undefined) {
+              this.temperaturerCard.value = temperature;
             }
+
+            if (pH !== undefined) {
+              this.pHCard.value = pH;
+            }
+
+            /*if (humidity !== undefined) {
+              this.humidityCard.value = humidity;
+            }*/
+          }
         });
   }
 
@@ -108,13 +111,31 @@ export class DetailsComponent implements OnDestroy, OnInit {
     this.outdated = diffDays > 1;
   }
 
+  public editName() {
+    this.isEditingName = true;
+  }
+
+  public saveName(name) {
+    this.device.name = name;
+
+    this.deviceService.updateDevice(this.device).toPromise().then((res) => {
+      this.isEditingName = false;
+    });
+  }
+
+  public deleteDevice() {
+    this.deviceService.deleteDevice(this.device._id).toPromise().then(() => {
+      this.router.navigate(['/pages/devices']);
+    })
+  }
+
   ngOnDestroy() {
-    this.socket.removeListener('chat message');
+    // this.socket.removeListener('chat message');
     this.alive = false;
   }
 
   ngOnInit(): void {
-    this.socket.on('connection', function (res) {
+    /*this.socket.on('connection', function (res) {
       res.on('chat message', function (msg) {
         // console.log('message: ' + msg);
       });
@@ -122,7 +143,7 @@ export class DetailsComponent implements OnDestroy, OnInit {
 
     this.socket.on('chat message', (res) => {
       // console.log(res);
-    });
+    });*/
 
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
@@ -140,11 +161,11 @@ export class DetailsComponent implements OnDestroy, OnInit {
             this.device = device;
           });
 
-        this.getLastMeasurementValue(id);
+        /*this.getLastMeasurementValue(id);
 
         setInterval(() => {
           this.getLastMeasurementValue(id);
-        }, 3000);
+        }, 3000);*/
       });
   }
 }

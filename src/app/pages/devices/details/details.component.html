@@ -1,19 +1,31 @@
 <div *ngIf="device">
   <nb-card>
     <nb-card-header class="text-center">
-      <h1>{{ device.name }}</h1>
+      <h1 *ngIf="!isEditingName" class="pull-left">{{ device.name }}
+        <button *nbIsGranted="['edit', 'device']" class="btn btn-warning name-btn" (click)="editName()">
+          <i class="nb-edit"></i>
+        </button>
+      </h1>
+      <div class="form-inline justify-content-center" *ngIf="isEditingName">
+        <div class="form-group">
+          <input #newName name="name" [value]="device.name" class="form-control"/>
+        </div>
+        <button class="btn btn-success name-btn" (click)="saveName(newName.value)">
+          <i class="nb-checkmark"></i>
+        </button>
+      </div>
     </nb-card-header>
   </nb-card>
-<!--
-  <nb-card>
-    <nb-card-body>
-      <div class="alert alert-danger" role="alert" style="margin-bottom: 0px">
-        <strong>Sinds {{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss' }} is er geen nieuwe data
-          binnen gekomen.</strong>
-      </div>
-    </nb-card-body>
-  </nb-card>
--->
+  <!--
+    <nb-card>
+      <nb-card-body>
+        <div class="alert alert-danger" role="alert" style="margin-bottom: 0px">
+          <strong>Sinds {{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss' }} is er geen nieuwe data
+            binnen gekomen.</strong>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  -->
   <nb-card>
     <nb-card-body>
       <ngx-sensor-values [selectedDevice]="device"></ngx-sensor-values>
@@ -25,13 +37,13 @@
       <ngx-sensor-graphs></ngx-sensor-graphs>
     </nb-card-body>
   </nb-card>
-<!--
-  <nb-card>
-    <nb-card-body>
-      <ngx-sensor-tables [selectedDevice]="device"></ngx-sensor-tables>
-    </nb-card-body>
-  </nb-card>
--->
+  <!--
+    <nb-card>
+      <nb-card-body>
+        <ngx-sensor-tables [selectedDevice]="device"></ngx-sensor-tables>
+      </nb-card-body>
+    </nb-card>
+  -->
   <nb-card>
     <nb-card-header>
       Apparaat details
@@ -67,6 +79,13 @@
           <p class="value">{{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss'}}</p>
         </div>
       </div>
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card *nbIsGranted="['remove', 'device']">
+    <nb-card-header>Apparaat verwijderen?</nb-card-header>
+    <nb-card-body class="text-center">
+      <button class="btn btn-danger" (click)="deleteDevice()">Verwijderen</button>
     </nb-card-body>
   </nb-card>
 </div>
