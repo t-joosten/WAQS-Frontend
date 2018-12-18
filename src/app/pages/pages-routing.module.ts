@@ -8,6 +8,7 @@ import {DevicesComponent} from './devices/devices.component';
 import {DetailsComponent} from './devices/details/details.component';
 import {InfoComponent} from './info/info.component';
 import {EchartsComponent} from "./charts/echarts/echarts.component";
+import {UsersComponent} from "./users/users.component";
 
 const routes: Routes = [{
   path: '',
@@ -16,6 +17,10 @@ const routes: Routes = [{
     {
       path: 'devices',
       component: DevicesComponent,
+    },
+    {
+      path: 'users',
+      component: UsersComponent,
     },
     {
       path: 'devices/:id',

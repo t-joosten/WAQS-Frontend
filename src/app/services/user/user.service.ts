@@ -11,7 +11,7 @@ import {NbAuthJWTToken, NbAuthService} from "@nebular/auth";
 const API_URL = environment.apiUrl;
 
 @Injectable({providedIn: 'root'})
-export class DeviceService {
+export class UserService {
   private token = null;
 
   constructor(private http: HttpClient, private authService: NbAuthService) {
@@ -25,26 +25,20 @@ export class DeviceService {
       });
   }
 
-  public getAllDevices(page : number, getAll?: boolean): Observable<any> {
-    let url = API_URL + '/devices?page=' + page;
-    if (getAll) url = API_URL + '/devices?all=' + getAll;
-    return this.http.get(url);
-  }
-
-  public getDevice(deviceId): Observable<any> {
-    return this.http.get(`${API_URL}/devices/${deviceId}`);
-  }
-
-  public updateDevice(device): Observable<any> {
+  public getAllUsers(page : number): Observable<any> {
     const headers = new HttpHeaders().set("x-access-token", this.token);
-    return this.http.put(`${API_URL}/devices/${device._id}`, device, {headers});
+    return this.http.get(API_URL + '/users?page=' + page, {headers});
   }
 
-  public deleteDevice(deviceId): Observable<any> {
+  public updateUser(user): Observable<any> {
     const headers = new HttpHeaders().set("x-access-token", this.token);
-    return this.http.delete(`${API_URL}/devices/${deviceId}`, {headers})
+    return this.http.put(`${API_URL}/users/${user._id}`, user, {headers});
   }
 
+  public deleteUser(userId): Observable<any> {
+    const headers = new HttpHeaders().set("x-access-token", this.token);
+    return this.http.delete(`${API_URL}/users/${userId}`, {headers})
+  }
   /*private handleError(error: Response | any) {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);

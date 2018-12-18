@@ -1,0 +1,46 @@
+<nb-card>
+  <nb-card-header class="text-center">
+    <h1>Gebruikers</h1>
+  </nb-card-header>
+</nb-card>
+
+<nb-card *nbIsGranted="['view', 'users']">
+  <nb-card-body>
+    <div class="row mb-3 pb-3" style="border-bottom: 1px solid lightgrey">
+      <div class="col-md-2 d-flex align-items-center font-weight-bold">Naam</div>
+      <div class="col-md-3 d-flex align-items-center font-weight-bold">E-mail</div>
+      <div class="col-md-3 d-flex align-items-center font-weight-bold">Rol</div>
+      <div class="col-md-2 d-flex align-items-center font-weight-bold">Actief</div>
+      <div class="col-md-2 d-flex align-items-center font-weight-bold">Verwijderen</div>
+    </div>
+    <div class="row" *ngFor="let user of users | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: countUsers }">
+      <div class="col-md-2 d-flex align-items-center mb-2">{{ user.fullName }}</div>
+      <div class="col-md-3 d-flex align-items-center mb-2">{{ user.email }}</div>
+      <div class="col-md-3 d-flex align-items-center mb-2 form-group">
+        <select class="form-control" style="width: 150px;" (change)="onRoleChange($event.target.value, user)">
+          <option value="admin" [selected]="user.role === 'admin'">Administrator</option>
+          <option value="user" [selected]="user.role === 'user'">Gebruiker</option>
+        </select>
+      </div>
+      <div class="col-md-2 d-flex align-items-center mb-2">
+        <select class="form-control" style="width: 150px;" (change)="onStatusChange($event.target.value, user)">
+          <option value="0" [selected]="user.isActive === true">Actief</option>
+          <option value="1" [selected]="user.isActive === false">Uitgeschakeld</option>
+        </select>
+      </div>
+      <div class="col-md-2 d-flex align-items-center mb-2">
+        <button class="btn btn-danger delete-btn" (click)="deleteUser(user)">
+          <i class="nb-trash"></i>
+        </button>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-body>
+    <div class="row justify-content-center mt-4">
+      <pagination-controls (pageChange)="pageChanged($event)" previousLabel="Vorige" nextLabel="Volgende" responsive="true"></pagination-controls>
+    </div>
+  </nb-card-body>
+</nb-card>

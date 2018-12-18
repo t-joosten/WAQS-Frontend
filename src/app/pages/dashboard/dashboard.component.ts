@@ -15,16 +15,21 @@ export class DashboardComponent implements OnDestroy {
   public selectedDevice: Device;
   private alive = true;
 
+  public currentPage : number = 1;
+  public pageSize : number = 1;
+  public countDevices: number = 0;
+  public pages : number = 1;
+
   constructor(private themeService: NbThemeService, private deviceService: DeviceService) {
     this.themeService.getJsTheme()
       .pipe(takeWhile(() => this.alive))
       .subscribe(theme => {
-        this.deviceService.getAllDevices().subscribe((devices) => {
+        this.deviceService.getAllDevices(0, true).subscribe((devices) => {
           this.devices = devices;
           this.devicesLoaded = true;
         }, (err) => {
         });
-    });
+      });
   }
 
   deviceSelectedHandler(device: Device) {

@@ -15,6 +15,7 @@ import {TemperatureGraphComponent} from './details/temperature-graph/temperature
 import {SensorValuesModule} from '../components/sensor-values/sensor-values.module';
 import {SensorGraphsModule} from '../components/sensor-graphs/sensor-graphs.module';
 import {SensorTablesModule} from '../components/sensor-tables/sensor-tables.module';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import {SensorTablesModule} from '../components/sensor-tables/sensor-tables.modu
     RouterModule,
     SensorValuesModule,
     SensorGraphsModule,
-    SensorTablesModule
+    SensorTablesModule,
+    NgxPaginationModule,
   ],
   declarations: [
     DevicesComponent,

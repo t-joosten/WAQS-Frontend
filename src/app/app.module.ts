@@ -17,9 +17,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 import {environment} from '../environments/environment';
 import {AuthGuard} from './guard/auth-guard.service';
-import {NbRoleProvider, NbSecurityModule} from '@nebular/security';
+import {NbRoleProvider} from '@nebular/security';
 import {RoleService} from './services/role/role.service';
-
+import {ToastrModule} from "ngx-toastr";
 
 const SOCKET_URL = environment.socketURL;
 
@@ -37,11 +37,13 @@ const config: SocketIoConfig = {url: SOCKET_URL, options: {}};
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
     SocketIoModule.forRoot(config),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
   ],
   bootstrap: [AppComponent],
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},
-    { provide: NbRoleProvider, useClass: RoleService },
+    {provide: NbRoleProvider, useClass: RoleService},
     AuthGuard,
   ],
 })

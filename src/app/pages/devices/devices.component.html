@@ -5,7 +5,7 @@
 </nb-card>
 
 <div class="row">
-  <div class="col-md-3 col-xs-12" *ngFor="let device of devices">
+  <div class="col-md-3 col-xs-12" *ngFor="let device of devices | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: countDevices }">
     <nb-card [routerLink]="device._id">
       <nb-card-header>
         {{ device.name }}
@@ -23,3 +23,11 @@
     </nb-card>
   </div>
 </div>
+
+<nb-card>
+  <nb-card-body>
+    <div class="row justify-content-center mt-4">
+      <pagination-controls (pageChange)="pageChanged($event)" previousLabel="Vorige" nextLabel="Volgende" responsive="true"></pagination-controls>
+    </div>
+  </nb-card-body>
+</nb-card>

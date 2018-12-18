@@ -8,6 +8,7 @@ import {ThemeModule} from '../@theme/theme.module';
 import {MiscellaneousModule} from './miscellaneous/miscellaneous.module';
 import {DevicesModule} from './devices/devices.module';
 import {InfoModule} from './info/info.module';
+import {UsersModule} from "./users/users.module";
 
 const PAGES_COMPONENTS = [
   PagesComponent,
@@ -22,6 +23,7 @@ const PAGES_COMPONENTS = [
     MiscellaneousModule,
     DevicesModule,
     InfoModule,
+    UsersModule,
   ],
   declarations: [
     ...PAGES_COMPONENTS,

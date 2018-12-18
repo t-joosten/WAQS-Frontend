@@ -71,13 +71,16 @@ export const NB_CORE_PROVIDERS = [
         view: [],
       },
       user: {
-        view: ['*'],
+        view: ['dashboard'],
         parent: 'guest',
+        menu: ['dashboard', 'devices', 'information']
       },
       admin: {
+        view: ['*'],
         parent: 'user',
         edit: ['device'],
         remove: ['device'],
+        menu: ['*']
       },
     },
   }).providers,

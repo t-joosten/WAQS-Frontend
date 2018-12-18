@@ -8,6 +8,7 @@ import {Device} from '../../../models/device.model';
 import {DeviceService} from '../../../services/device/device.service';
 import {Socket} from 'ngx-socket-io';
 import {EChartOption} from 'echarts';
+import {ToastrService} from "ngx-toastr";
 
 interface CardSettings {
   title: string;
@@ -70,7 +71,7 @@ export class DetailsComponent implements OnDestroy, OnInit {
 
   constructor(private themeService: NbThemeService, private measurementService: MeasurementService,
               private deviceService: DeviceService, private route: ActivatedRoute, private router: Router,
-              private socket: Socket, ) {
+              private socket: Socket, private toastr: ToastrService) {
 
   }
 
@@ -120,13 +121,20 @@ export class DetailsComponent implements OnDestroy, OnInit {
 
     this.deviceService.updateDevice(this.device).toPromise().then((res) => {
       this.isEditingName = false;
+      this.toastr.success('De naam van het apparaat is aangepast.', 'Apparaat wijzigen');
+    }).catch((err) => {
+      this.isEditingName = false;
+      this.toastr.error('De naam van het apparaat kan niet aangepast worden.', 'Apparaat wijzigen');
     });
   }
 
   public deleteDevice() {
     this.deviceService.deleteDevice(this.device._id).toPromise().then(() => {
       this.router.navigate(['/pages/devices']);
-    })
+      this.toastr.error('Het apparaat is verwijdered.', 'Apparaat verwijderen');
+    }).catch((err) => {
+      this.toastr.error('Het apparaat kan niet verwijderd worden.', 'Apparaat verwijderen');
+    });
   }
 
   ngOnDestroy() {
