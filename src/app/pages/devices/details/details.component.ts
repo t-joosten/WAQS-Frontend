@@ -76,7 +76,7 @@ export class DetailsComponent implements OnDestroy, OnInit {
   }
 
   private getLastMeasurementValue(id) {
-    this.lastMeasurementSubscription = this.measurementService.getLastMeasurement(id)
+    this.lastMeasurementSubscription = this.measurementService.getLastMeasurements(id)
       .subscribe(
         (lastMeasurement) => {
           // console.log(this.device['_id'] + ' ' + lastMeasurement.device);

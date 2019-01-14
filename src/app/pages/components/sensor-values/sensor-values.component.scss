@@ -17,6 +17,12 @@
       padding: 0;
     }
 
+    .icon-container img {
+      height: 100%;
+      border-bottom-left-radius: 5px;
+      border-top-left-radius: 5px;
+    }
+
     .icon {
       height: 100%;
       display: flex;
@@ -135,8 +141,16 @@
     .status {
       font-size: 1.6rem;
       font-weight: nb-theme(font-weight-light);
-      text-transform: uppercase;
       color: nb-theme(card-fg);
+    }
+
+    .gate-value {
+      position: absolute;
+      right: 20px;
+      top: 5px;
+      border: 1px solid #e2e2e2;
+      color: #e2e2e2;
+      padding: 5px;
     }
   }
 

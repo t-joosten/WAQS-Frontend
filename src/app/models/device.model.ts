@@ -4,6 +4,8 @@ export class Device {
   appId: string;
   devId: string;
   hardwareSerial: string;
+  battery: Number;
+  alt: Number;
   lat: Number;
   long: Number;
   createdAt: Date;

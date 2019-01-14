@@ -1,24 +1,25 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {MeasurementService} from '../../../services/measurement/measurement.service';
 import {Device} from '../../../models/device.model';
+import {SubstanceService} from '../../../services/substance/substance.service';
 
 @Component({
   selector: 'ngx-sensor-values',
   styleUrls: ['./sensor-values.component.scss'],
   template: `
-    <div class="row" *ngIf="selectedDevice && lastMeasurementLoaded && lastMeasurement">
-      <div class="col-md-4" *ngFor="let key of objectKeys(lastMeasurement.values)">
-        <nb-card>
+    <div class="row" *ngIf="selectedDevice && lastMeasurementsLoaded && lastMeasurements">
+      <div class="col-md-4" *ngFor="let measurement of lastMeasurements">
+        <nb-card [routerLink]="['/pages/devices/' + selectedDevice._id]">
           <div class="icon-container">
-            <div class="icon warning">
-              <i class="nb-sunny"></i>
-            </div>
+              <img src="{{ substance.getIcon(measurement.substanceId) }}" />
           </div>
 
           <div class="details">
-            <div class="title">{{ key }}</div>
-            <div class="status">{{lastMeasurement.values[key]}}</div>
+            <div class="title">{{ substance.getText(measurement.substanceId) }}</div>
+            <div class="status">{{ measurement.value}} {{ substance.getType(measurement.substanceId) }}</div>
           </div>
+          
+          <span class="gate-value">{{ measurement.gateId }}</span>
         </nb-card>
       </div>
     </div>
@@ -27,19 +28,27 @@ import {Device} from '../../../models/device.model';
 export class SensorValuesComponent implements OnInit, OnChanges {
   @Input() selectedDevice: Device;
   objectKeys = Object.keys;
-  public lastMeasurement: any;
-  public lastMeasurementLoaded = false;
+  public lastMeasurements: any;
+  public lastMeasurementsLoaded = false;
   private lastMeasurementSubscription: any;
 
-  constructor(private measurementService: MeasurementService) {
+  constructor(private measurementService: MeasurementService, public substance: SubstanceService) {
   }
 
   private getLastMeasurementValue(id) {
-    this.lastMeasurementSubscription = this.measurementService.getLastMeasurement(id)
+    this.lastMeasurementSubscription = this.measurementService.getLastMeasurements(id)
       .subscribe(
-        (lastMeasurement) => {
-          this.lastMeasurement = lastMeasurement;
-          this.lastMeasurementLoaded = true;
+        (lastMeasurements) => {
+          console.log(lastMeasurements);
+          /*lastMeasurements.forEach((measurement) => {
+            const sId =  measurement.substanceId;
+            measurement.text = this.substance.getText(sId);
+            measurement.type = this.substance.getType(sId);
+            measurement.icon = this.substance.getIcon(sId);
+          });*/
+
+          this.lastMeasurements = lastMeasurements;
+          this.lastMeasurementsLoaded = true;
         });
   }
 

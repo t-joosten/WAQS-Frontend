@@ -18,7 +18,7 @@ export class SensorTablesComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private getLastMeasurementValue(id) {
-    this.lastMeasurementSubscription = this.measurementService.getLastMeasurement(id)
+    this.lastMeasurementSubscription = this.measurementService.getLastMeasurements(id)
       .subscribe(
         (lastMeasurement) => {
           this.lastMeasurement = lastMeasurement;

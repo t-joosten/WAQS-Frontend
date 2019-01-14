@@ -79,8 +79,8 @@ export class MapComponent implements OnInit {
   }
 
   initializeDeviceMarkers(devices) {
-    for (let i = 0; i < 2 /*devices.length*/; i++) {
-      this.createDeviceMarker(devices[i]);
-    }
+    devices.forEach((device) => {
+      this.createDeviceMarker(device);
+    });
   }
 }

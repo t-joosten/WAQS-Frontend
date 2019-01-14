@@ -19,7 +19,7 @@ export class MeasurementService {
     return this.http.get(`${API_URL}/measurements/${deviceId}`);
   }
 
-  public getLastMeasurement(deviceId): Observable<any> {
+  public getLastMeasurements(deviceId): Observable<any> {
     return this.http.get(`${API_URL}/measurements/${deviceId}/last`);
   }
 
