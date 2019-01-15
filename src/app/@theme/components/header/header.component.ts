@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
-import {NbMenuService, NbSidebarService} from '@nebular/theme';
+import {NbMenuService, NbSearchService, NbSidebarService} from '@nebular/theme';
 import {UserService} from '../../../@core/data/users.service';
 import {AnalyticsService} from '../../../@core/utils/analytics.service';
 import {LayoutService} from '../../../@core/data/layout.service';
 import {NbAuthJWTToken, NbAuthService} from '@nebular/auth';
 import {filter, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {SearchService} from "../../../services/search/search.service";
 
 @Component({
   selector: 'ngx-header',
@@ -30,6 +31,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private analyticsService: AnalyticsService,
               private layoutService: LayoutService,
               private authService: NbAuthService,
+              private searchService: NbSearchService,
+              private apiSearchService: SearchService,
               private router: Router) {
     this.authService.onTokenChange()
       .subscribe((token: NbAuthJWTToken) => {
@@ -37,6 +40,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.user = token.getPayload();
         }
       });
+
+    this.searchService.onSearchSubmit()
+      .subscribe((data: any) => {
+        /*this.router.navigate(['search']);
+        this.apiSearchService.getSearchResults(data.term).subscribe((res) => {
+          console.log(res);
+        }, (err) => {
+          console.log(err);
+        });*/
+        // this.value = data.term;
+      })
   }
 
   ngOnInit() {

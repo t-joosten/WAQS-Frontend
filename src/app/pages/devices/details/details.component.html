@@ -34,16 +34,16 @@
 
   <nb-card>
     <nb-card-body>
-      <ngx-sensor-graphs></ngx-sensor-graphs>
+      <ngx-sensor-graphs [selectedDevice]="device"></ngx-sensor-graphs>
     </nb-card-body>
   </nb-card>
-  <!--
-    <nb-card>
-      <nb-card-body>
-        <ngx-sensor-tables [selectedDevice]="device"></ngx-sensor-tables>
-      </nb-card-body>
-    </nb-card>
-  -->
+
+  <nb-card>
+    <nb-card-body>
+      <ngx-sensor-tables [selectedDevice]="device"></ngx-sensor-tables>
+    </nb-card-body>
+  </nb-card>
+
   <nb-card>
     <nb-card-header>
       Apparaat details

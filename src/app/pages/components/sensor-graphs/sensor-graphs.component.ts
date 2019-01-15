@@ -1,14 +1,26 @@
-import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import { init, ECharts, EChartOption } from 'echarts';
+import {Device} from "../../../models/device.model";
 
 @Component({
   selector: 'ngx-sensor-graphs',
   template: `
-    <div echarts [options]="options" [merge]="updateOptions" class="echart"></div>`,
+        <nb-tabset>
+          <nb-tab tabTitle="Temperatuur">
+            <div echarts [options]="options" [merge]="updateOptions" class="echart mt-4"></div>
+          </nb-tab>
+          <nb-tab tabTitle="pH" [active]="true">
+            <div echarts [options]="options" [merge]="updateOptions" class="echart mt-4"></div>
+          </nb-tab>
+          <nb-tab tabTitle="Zuurstof">
+            <div echarts [options]="options" [merge]="updateOptions" class="echart mt-4"></div>
+          </nb-tab>
+        </nb-tabset>`,
   styleUrls: ['./sensor-graphs.component.scss']
 })
 export class SensorGraphsComponent implements AfterViewInit, OnDestroy {
+  @Input() selectedDevice: Device;
   options: EChartOption = {};
   updateOptions: EChartOption = {};
 
@@ -59,8 +71,8 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy {
           formatter: function (params) {
             params = params[0];
             const date = new Date(params.name);
-            return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() +
-              ' ' + date.getHours() + ':' + date.getMinutes() + ' = ' + params.value[1];
+            return ('0' + (date.getDate())).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear() +
+              ' ' + ('0' + (date.getHours())).slice(-2) + ':' + ('0' + (date.getMinutes())).slice(-2) + ' = ' + params.value[1];
           },
           axisPointer: {
             animation: false

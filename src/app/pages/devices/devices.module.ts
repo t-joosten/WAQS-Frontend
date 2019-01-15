@@ -16,6 +16,7 @@ import {SensorValuesModule} from '../components/sensor-values/sensor-values.modu
 import {SensorGraphsModule} from '../components/sensor-graphs/sensor-graphs.module';
 import {SensorTablesModule} from '../components/sensor-tables/sensor-tables.module';
 import {NgxPaginationModule} from 'ngx-pagination';
+import {NbTabsetModule} from "@nebular/theme";
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
     SensorGraphsModule,
     SensorTablesModule,
     NgxPaginationModule,
+    NbTabsetModule,
   ],
   declarations: [
     DevicesComponent,

@@ -35,18 +35,10 @@ export class SensorValuesComponent implements OnInit, OnChanges {
   constructor(private measurementService: MeasurementService, public substance: SubstanceService) {
   }
 
-  private getLastMeasurementValue(id) {
+  private getLastMeasurements(id) {
     this.lastMeasurementSubscription = this.measurementService.getLastMeasurements(id)
       .subscribe(
         (lastMeasurements) => {
-          console.log(lastMeasurements);
-          /*lastMeasurements.forEach((measurement) => {
-            const sId =  measurement.substanceId;
-            measurement.text = this.substance.getText(sId);
-            measurement.type = this.substance.getType(sId);
-            measurement.icon = this.substance.getIcon(sId);
-          });*/
-
           this.lastMeasurements = lastMeasurements;
           this.lastMeasurementsLoaded = true;
         });
@@ -56,12 +48,12 @@ export class SensorValuesComponent implements OnInit, OnChanges {
     for (const property in changes) {
       if (property === 'selectedDevice') {
         this.selectedDevice = changes[property].currentValue;
-        this.getLastMeasurementValue(this.selectedDevice._id);
+        this.getLastMeasurements(this.selectedDevice._id);
       }
     }
   }
 
   ngOnInit(): void {
-    this.getLastMeasurementValue(this.selectedDevice._id);
+    this.getLastMeasurements(this.selectedDevice._id);
   }
 }

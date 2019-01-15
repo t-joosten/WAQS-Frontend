@@ -4,7 +4,7 @@ import {now} from "moment";
 
 @Component({
   selector: 'ngx-temperature-graph',
-  template: `<div echarts [options]="options" class="echart"></div>`,
+  templateUrl: './temperature-graph.html',
 })
 export class TemperatureGraphComponent implements AfterViewInit, OnDestroy {
   options: any = {};
@@ -95,5 +95,5 @@ export class TemperatureGraphComponent implements AfterViewInit, OnDestroy {
     this.themeSubscription.unsubscribe();
   }
 
-  
+
 }
