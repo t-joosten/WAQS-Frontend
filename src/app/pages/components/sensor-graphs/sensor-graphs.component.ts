@@ -1,27 +1,23 @@
-import {AfterViewInit, Component, Input, OnDestroy, ViewChild} from '@angular/core';
-import { NbThemeService } from '@nebular/theme';
-import { init, ECharts, EChartOption } from 'echarts';
-import {Device} from "../../../models/device.model";
+import {AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {NbThemeService} from '@nebular/theme';
+import {EChartOption, ECharts, init} from 'echarts';
+import {Device} from '../../../models/device.model';
+import {MeasurementService} from '../../../services/measurement/measurement.service';
 
 @Component({
   selector: 'ngx-sensor-graphs',
   template: `
-        <nb-tabset>
-          <nb-tab tabTitle="Temperatuur">
-            <div echarts [options]="options" [merge]="updateOptions" class="echart mt-4"></div>
-          </nb-tab>
-          <nb-tab tabTitle="pH" [active]="true">
-            <div echarts [options]="options" [merge]="updateOptions" class="echart mt-4"></div>
-          </nb-tab>
-          <nb-tab tabTitle="Zuurstof">
-            <div echarts [options]="options" [merge]="updateOptions" class="echart mt-4"></div>
-          </nb-tab>
-        </nb-tabset>`,
+    <nb-tabset>
+      <nb-tab tabTitle="Temperatuur" *ngFor="let options of multiOptions">
+        <div echarts [options]="options" [merge]="updateOptions" class="echart mt-4"></div>
+      </nb-tab>
+    </nb-tabset>`,
   styleUrls: ['./sensor-graphs.component.scss']
 })
-export class SensorGraphsComponent implements AfterViewInit, OnDestroy {
+export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() selectedDevice: Device;
-  options: EChartOption = {};
+  multiOptions = [];
+  // options: EChartOption = {};
   updateOptions: EChartOption = {};
 
   timer: any;
@@ -36,7 +32,7 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy {
   now = new Date(2018, 3, 11);
   value = Math.random() * 4 + 18;
 
-  constructor(private theme: NbThemeService) {
+  constructor(private theme: NbThemeService, private measurementService: MeasurementService) {
   }
 
   randomData() {
@@ -51,64 +47,96 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  getMeasurementData(deviceId) {
+    this.measurementService.getLastThreeDayMeasurements(deviceId).subscribe(
+      (res) => {
+        /*const colors: any = config.variables;
+        const echarts: any = config.variables.echarts;*/
+        let index = 0;
+
+        res.forEach((measurementData) => {
+          const data = [];
+
+          measurementData.forEach((measurement) => {
+            data.push({
+              name: new Date(measurement.createdAt).toString(),
+              value: [
+                new Date(measurement.createdAt),
+                Math.round(measurement.value),
+              ]
+            });
+          });
+
+          const options = {
+            backgroundColor: '#e2e2e2',
+            color: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+            title: {
+              text: 'Temperatuur'
+            },
+            tooltip: {
+              trigger: 'axis',
+              formatter: function (params) {
+                params = params[0];
+                const date = new Date(params.name);
+                return ('0' + (date.getDate())).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear() +
+                  ' ' + ('0' + (date.getHours())).slice(-2) + ':' + ('0' + (date.getMinutes())).slice(-2) + ' = ' + params.value[1];
+              },
+              axisPointer: {
+                animation: false
+              }
+            },
+            xAxis: {
+              type: 'time',
+              splitLine: {
+                show: false
+              }
+            },
+            yAxis: {
+              type: 'value',
+            },
+            series: [{
+              name: 'Tijd',
+              type: 'line',
+              showSymbol: false,
+              hoverAnimation: false,
+              data: data
+            }],
+          };
+
+          this.multiOptions.push(options);
+        });
+
+        /*this.timer = setInterval(() => {
+
+          for (let i = 0; i < 5; i++) {
+            this.data.shift();
+            this.data.push(this.randomData());
+          }
+
+          this.updateOptions = {
+            series: [{
+              data: this.data
+            }]
+          }
+        }, 1000);*/
+        console.log(res)
+      }, (err) => {
+        console.log(err);
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    for (const property in changes) {
+      if (property === 'selectedDevice') {
+        this.selectedDevice = changes[property].currentValue;
+        this.getMeasurementData(this.selectedDevice._id);
+      }
+    }
+  }
+
   ngAfterViewInit() {
     this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
-      const colors: any = config.variables;
-      const echarts: any = config.variables.echarts;
 
-      for (let i = 0; i < 1000; i++) {
-        this.data.push(this.randomData());
-      }
-
-      this.options = {
-        backgroundColor: echarts.bg,
-        color: [colors.danger, colors.primary, colors.info],
-        title: {
-          text: 'Temperatuur'
-        },
-        tooltip: {
-          trigger: 'axis',
-          formatter: function (params) {
-            params = params[0];
-            const date = new Date(params.name);
-            return ('0' + (date.getDate())).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear() +
-              ' ' + ('0' + (date.getHours())).slice(-2) + ':' + ('0' + (date.getMinutes())).slice(-2) + ' = ' + params.value[1];
-          },
-          axisPointer: {
-            animation: false
-          }
-        },
-        xAxis: {
-          type: 'time',
-          splitLine: {
-            show: false
-          }
-        },
-        yAxis: {
-          type: 'value',
-        },
-        series: [{
-          name: 'Tijd',
-          type: 'line',
-          showSymbol: false,
-          hoverAnimation: false,
-          data: this.data
-        }],
-      };
-
-      this.timer = setInterval(() => {
-
-        for (let i = 0; i < 5; i++) {
-          this.data.shift();
-          this.data.push(this.randomData());
-        }
-
-        this.updateOptions = {
-          series: [{
-            data: this.data
-          }]
-        }
-      }, 1000);
     });
   }
 
