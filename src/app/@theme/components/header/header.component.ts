@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   userMenuSubscription: any;
 
-  userMenu = [{title: 'Profiel'}, {title: 'Uitloggen', link: ['/auth/logout']}];
+  userMenu = [{title: 'Uitloggen', link: ['/auth/logout']}];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
