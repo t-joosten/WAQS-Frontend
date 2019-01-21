@@ -1,45 +1,85 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Device} from "../../../models/device.model";
-import {MeasurementService} from "../../../services/measurement/measurement.service";
+import {Device} from '../../../models/device.model';
+import {MeasurementService} from '../../../services/measurement/measurement.service';
+import {SubstanceService} from '../../../services/substance/substance.service';
+import {Socket} from 'ngx-socket-io';
 
 @Component({
   selector: 'ngx-sensor-tables',
-  template: '<table class="table" *ngIf="selectedDevice && lastMeasurementLoaded"><thead><tr><th></th><th>Waarde</th><th>Norm</th></tr></thead><tbody><tr *ngFor="let key of objectKeys(lastMeasurement.values)"><td>{{ key }}</td><td>{{lastMeasurement.values[key]}}</td><td>< 25</td></tr></tbody></table>',
-  styleUrls: ['./sensor-tables.component.scss']
+  styleUrls: ['./sensor-tables.component.scss'],
+  template: `
+    <div class="table-responsive">
+    <table *ngIf="selectedDevice && lastMeasurementsLoaded && lastMeasurements" class="table table-bordered table-measurement">
+      <thead>
+      <tr>
+        <th>Stofgroep</th>
+        <th>Waarde</th>
+        <th>Ondergrens</th>
+        <th>Bovengrens</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let measurement of lastMeasurements">
+        <td><span class="gate-value">{{ measurement.gateId }}</span> {{ substance.getText(measurement.substanceId) }}</td>
+        <td>{{ measurement.value}} {{ substance.getType(measurement.substanceId) }}</td>
+        <td>{{ substance.getLowerBound(measurement.substanceId) }}</td>
+        <td>{{ substance.getUpperBound(measurement.substanceId) }}</td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+  `,
 })
 export class SensorTablesComponent implements OnInit, OnChanges, OnDestroy {
   @Input() selectedDevice: Device;
-  lastMeasurementSubscription: any;
+  objectKeys = Object.keys;
+  public lastMeasurements: any;
+  public lastMeasurementsLoaded = false;
+  private lastMeasurementSubscription: any;
 
-  public lastMeasurementLoaded = false;
-  public lastMeasurement: any;
-
-  constructor(private measurementService: MeasurementService) {
+  constructor(private measurementService: MeasurementService, public substance: SubstanceService,
+              private socket: Socket ) {
   }
 
-  private getLastMeasurementValue(id) {
+  private getLastMeasurements(id) {
     this.lastMeasurementSubscription = this.measurementService.getLastMeasurements(id)
       .subscribe(
-        (lastMeasurement) => {
-          this.lastMeasurement = lastMeasurement;
-          this.lastMeasurementLoaded = true;
+        (lastMeasurements) => {
+          this.lastMeasurements = lastMeasurements;
+          this.lastMeasurementsLoaded = true;
         });
+
+    this.socket.on(`device/` + id + '/measurement', (newMeasurement) => {
+      console.log(newMeasurement);
+      let found = false;
+      this.lastMeasurements.forEach((measurement) => {
+        if (measurement.gateId === newMeasurement.gateId) {
+          measurement.substanceId = newMeasurement.substanceId;
+          measurement.value = newMeasurement.value;
+          found = true;
+        }
+      });
+
+      if (!found)
+        this.lastMeasurements.push(newMeasurement);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     for (const property in changes) {
       if (property === 'selectedDevice') {
         this.selectedDevice = changes[property].currentValue;
-        this.getLastMeasurementValue(this.selectedDevice._id);
+        this.getLastMeasurements(this.selectedDevice._id);
       }
     }
   }
 
-  ngOnInit() {
-    this.getLastMeasurementValue(this.selectedDevice._id);
+  ngOnInit(): void {
+    this.getLastMeasurements(this.selectedDevice._id);
   }
 
   ngOnDestroy() {
+    this.socket.removeListener(`device/` + this.selectedDevice._id);
     this.lastMeasurementSubscription.unsubscribe();
   }
 

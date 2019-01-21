@@ -9,13 +9,11 @@ import {MomentModule} from 'ngx-moment';
 
 import {DevicesComponent} from './devices.component';
 import {DetailsComponent} from './details/details.component';
-import {TemperatureComponent} from './details/temperature/temperature.component';
-import {StatusCardComponent} from './details/status-card/status-card.component';
-import {TemperatureGraphComponent} from './details/temperature-graph/temperature-graph';
 import {SensorValuesModule} from '../components/sensor-values/sensor-values.module';
 import {SensorGraphsModule} from '../components/sensor-graphs/sensor-graphs.module';
 import {SensorTablesModule} from '../components/sensor-tables/sensor-tables.module';
 import {NgxPaginationModule} from 'ngx-pagination';
+import {NbTabsetModule} from '@nebular/theme';
 
 @NgModule({
   imports: [
@@ -27,13 +25,11 @@ import {NgxPaginationModule} from 'ngx-pagination';
     SensorGraphsModule,
     SensorTablesModule,
     NgxPaginationModule,
+    NbTabsetModule,
   ],
   declarations: [
     DevicesComponent,
     DetailsComponent,
-    TemperatureComponent,
-    StatusCardComponent,
-    TemperatureGraphComponent,
   ],
 })
 export class DevicesModule {

@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {MeasurementService} from '../../../services/measurement/measurement.service';
 import {Device} from '../../../models/device.model';
 import {SubstanceService} from '../../../services/substance/substance.service';
+import {Socket} from "ngx-socket-io";
 
 @Component({
   selector: 'ngx-sensor-values',
@@ -11,14 +12,14 @@ import {SubstanceService} from '../../../services/substance/substance.service';
       <div class="col-md-4" *ngFor="let measurement of lastMeasurements">
         <nb-card [routerLink]="['/pages/devices/' + selectedDevice._id]">
           <div class="icon-container">
-              <img src="{{ substance.getIcon(measurement.substanceId) }}" />
+            <img src="{{ substance.getIcon(measurement.substanceId) }}"/>
           </div>
 
           <div class="details">
             <div class="title">{{ substance.getText(measurement.substanceId) }}</div>
             <div class="status">{{ measurement.value}} {{ substance.getType(measurement.substanceId) }}</div>
           </div>
-          
+
           <span class="gate-value">{{ measurement.gateId }}</span>
         </nb-card>
       </div>
@@ -32,36 +33,44 @@ export class SensorValuesComponent implements OnInit, OnChanges {
   public lastMeasurementsLoaded = false;
   private lastMeasurementSubscription: any;
 
-  constructor(private measurementService: MeasurementService, public substance: SubstanceService) {
+  constructor(private measurementService: MeasurementService, public substance: SubstanceService,
+              private socket: Socket) {
   }
 
-  private getLastMeasurementValue(id) {
+  private getLastMeasurements(id) {
     this.lastMeasurementSubscription = this.measurementService.getLastMeasurements(id)
       .subscribe(
         (lastMeasurements) => {
-          console.log(lastMeasurements);
-          /*lastMeasurements.forEach((measurement) => {
-            const sId =  measurement.substanceId;
-            measurement.text = this.substance.getText(sId);
-            measurement.type = this.substance.getType(sId);
-            measurement.icon = this.substance.getIcon(sId);
-          });*/
-
           this.lastMeasurements = lastMeasurements;
           this.lastMeasurementsLoaded = true;
         });
+
+    this.socket.on(`device/` + id + '/measurement', (newMeasurement) => {
+      console.log(newMeasurement);
+      let found = false;
+      this.lastMeasurements.forEach((measurement) => {
+        if (measurement.gateId === newMeasurement.gateId) {
+          measurement.substanceId = newMeasurement.substanceId;
+          measurement.value = newMeasurement.value;
+          found = true;
+        }
+      });
+
+      if (!found)
+        this.lastMeasurements.push(newMeasurement);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     for (const property in changes) {
       if (property === 'selectedDevice') {
         this.selectedDevice = changes[property].currentValue;
-        this.getLastMeasurementValue(this.selectedDevice._id);
+        this.getLastMeasurements(this.selectedDevice._id);
       }
     }
   }
 
   ngOnInit(): void {
-    this.getLastMeasurementValue(this.selectedDevice._id);
+    this.getLastMeasurements(this.selectedDevice._id);
   }
 }
