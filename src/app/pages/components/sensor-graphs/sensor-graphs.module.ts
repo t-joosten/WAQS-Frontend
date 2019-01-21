@@ -6,7 +6,7 @@ import {ChartModule} from 'angular2-chartjs';
 import {ThemeModule} from '../../../@theme/theme.module';
 
 import {SensorGraphsComponent} from './sensor-graphs.component';
-import {RouterModule} from "@angular/router";
+import {RouterModule} from '@angular/router';
 
 const components = [
   SensorGraphsComponent,

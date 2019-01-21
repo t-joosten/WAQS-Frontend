@@ -3,13 +3,15 @@ import {NbThemeService} from '@nebular/theme';
 import {EChartOption, ECharts, init} from 'echarts';
 import {Device} from '../../../models/device.model';
 import {MeasurementService} from '../../../services/measurement/measurement.service';
+import {SubstanceService} from '../../../services/substance/substance.service';
+import {Socket} from "ngx-socket-io";
 
 @Component({
   selector: 'ngx-sensor-graphs',
   template: `
     <nb-tabset>
-      <nb-tab tabTitle="Temperatuur" *ngFor="let options of multiOptions">
-        <div echarts [options]="options" [merge]="updateOptions" class="echart mt-4"></div>
+      <nb-tab tabTitle="{{options.title.name}}" *ngFor="let options of multiOptions; let i = index;">
+        <div echarts [options]="options" [merge]="multiUpdateOptions[i]" class="echart"></div>
       </nb-tab>
     </nb-tabset>`,
   styleUrls: ['./sensor-graphs.component.scss']
@@ -18,13 +20,13 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
   @Input() selectedDevice: Device;
   multiOptions = [];
   // options: EChartOption = {};
-  updateOptions: EChartOption = {};
+  multiUpdateOptions = [];
 
   timer: any;
 
   themeSubscription: any;
 
-  data = [];
+  multiData = [];
 
   oneDay = 24 * 3600 * 1000;
   fiveMinutes = 5 * 60 * 1000;
@@ -32,7 +34,8 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
   now = new Date(2018, 3, 11);
   value = Math.random() * 4 + 18;
 
-  constructor(private theme: NbThemeService, private measurementService: MeasurementService) {
+  constructor(private theme: NbThemeService, private measurementService: MeasurementService,
+              private substanceService: SubstanceService, private socket: Socket) {
   }
 
   randomData() {
@@ -50,10 +53,7 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
   getMeasurementData(deviceId) {
     this.measurementService.getLastThreeDayMeasurements(deviceId).subscribe(
       (res) => {
-        /*const colors: any = config.variables;
-        const echarts: any = config.variables.echarts;*/
-        let index = 0;
-
+        console.log(res);
         res.forEach((measurementData) => {
           const data = [];
 
@@ -62,24 +62,29 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
               name: new Date(measurement.createdAt).toString(),
               value: [
                 new Date(measurement.createdAt),
-                Math.round(measurement.value),
+                measurement.value,
               ]
             });
           });
 
           const options = {
-            backgroundColor: '#e2e2e2',
-            color: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+            gateId: measurementData[0].gateId,
+            substanceId: measurementData[0].substanceId,
+            backgroundColor: '#fff',
+            color: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae',
+              '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
             title: {
-              text: 'Temperatuur'
+              name: `${this.substanceService.getText(measurementData[0].substanceId)} | ${measurementData[0].gateId} |`
             },
             tooltip: {
               trigger: 'axis',
               formatter: function (params) {
                 params = params[0];
                 const date = new Date(params.name);
-                return ('0' + (date.getDate())).slice(-2) + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear() +
-                  ' ' + ('0' + (date.getHours())).slice(-2) + ':' + ('0' + (date.getMinutes())).slice(-2) + ' = ' + params.value[1];
+                return ('0' + (date.getDate())).slice(-2) + '-' +
+                  ('0' + (date.getMonth() + 1)).slice(-2) + '-' + date.getFullYear() +
+                  ' ' + ('0' + (date.getHours())).slice(-2) + ':' +
+                  ('0' + (date.getMinutes())).slice(-2) + ' = ' + params.value[1];
               },
               axisPointer: {
                 animation: false
@@ -102,9 +107,9 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
               data: data
             }],
           };
-
           this.multiOptions.push(options);
         });
+        console.log(this.multiOptions);
 
         /*this.timer = setInterval(() => {
 
@@ -123,6 +128,34 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
       }, (err) => {
         console.log(err);
       });
+
+    this.socket.on(`device/` + deviceId + '/measurement', (newMeasurement) => {
+      let index = 0;
+      this.multiOptions.forEach((options) => {
+        console.log(options);
+        if (options.gateId === newMeasurement.gateId) {
+          let data = options.series[0].data;
+          console.log(new Date(newMeasurement.createdAt).toString());
+
+          data.unshift({
+            name: new Date(newMeasurement.createdAt).toString(),
+            value: [
+              new Date(newMeasurement.createdAt),
+              newMeasurement.value,
+            ]
+          });
+          //data.push();
+
+          this.multiUpdateOptions[index] = {
+            series: [{
+              data
+            }]
+          }
+          console.log(options);
+        }
+        index++;
+      });
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

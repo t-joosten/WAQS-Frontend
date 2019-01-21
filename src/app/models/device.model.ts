@@ -10,6 +10,8 @@ export class Device {
   long: Number;
   createdAt: Date;
   updatedAt: Date;
+  deviceValuesUpdatedAt: Date;
+  sensorValuesUpdatedAt: Date;
 
   deserialize(input: any): this {
     Object.assign(this, input);

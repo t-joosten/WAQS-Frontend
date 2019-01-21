@@ -1,7 +1,8 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Device} from "../../../models/device.model";
-import {MeasurementService} from "../../../services/measurement/measurement.service";
-import {SubstanceService} from "../../../services/substance/substance.service";
+import {Device} from '../../../models/device.model';
+import {MeasurementService} from '../../../services/measurement/measurement.service';
+import {SubstanceService} from '../../../services/substance/substance.service';
+import {Socket} from 'ngx-socket-io';
 
 @Component({
   selector: 'ngx-sensor-tables',
@@ -36,7 +37,8 @@ export class SensorTablesComponent implements OnInit, OnChanges, OnDestroy {
   public lastMeasurementsLoaded = false;
   private lastMeasurementSubscription: any;
 
-  constructor(private measurementService: MeasurementService, public substance: SubstanceService) {
+  constructor(private measurementService: MeasurementService, public substance: SubstanceService,
+              private socket: Socket ) {
   }
 
   private getLastMeasurements(id) {
@@ -46,6 +48,21 @@ export class SensorTablesComponent implements OnInit, OnChanges, OnDestroy {
           this.lastMeasurements = lastMeasurements;
           this.lastMeasurementsLoaded = true;
         });
+
+    this.socket.on(`device/` + id + '/measurement', (newMeasurement) => {
+      console.log(newMeasurement);
+      let found = false;
+      this.lastMeasurements.forEach((measurement) => {
+        if (measurement.gateId === newMeasurement.gateId) {
+          measurement.substanceId = newMeasurement.substanceId;
+          measurement.value = newMeasurement.value;
+          found = true;
+        }
+      });
+
+      if (!found)
+        this.lastMeasurements.push(newMeasurement);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -62,6 +79,7 @@ export class SensorTablesComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.socket.removeListener(`device/` + this.selectedDevice._id);
     this.lastMeasurementSubscription.unsubscribe();
   }
 
