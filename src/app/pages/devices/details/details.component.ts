@@ -9,6 +9,7 @@ import {DeviceService} from '../../../services/device/device.service';
 import {Socket} from 'ngx-socket-io';
 import {EChartOption} from 'echarts';
 import {ToastrService} from 'ngx-toastr';
+import {environment} from '../../../../environments/environment';
 
 interface CardSettings {
   title: string;
@@ -26,27 +27,13 @@ export class DetailsComponent implements OnDestroy, OnInit {
   public outdated = false;
   private alive = true;
   public device: Device = null;
-  private lastMeasurementSubscription: any;
-  private index: number = 0;
-
+  public API_URL = environment.apiUrl;
   public isEditingName = false;
 
   constructor(private themeService: NbThemeService, private measurementService: MeasurementService,
               private deviceService: DeviceService, private route: ActivatedRoute, private router: Router,
               private socket: Socket, private toastr: ToastrService) {
 
-  }
-
-  private getLastMeasurementValue(id) {
-    this.lastMeasurementSubscription = this.measurementService.getLastMeasurements(id)
-      .subscribe(
-        (lastMeasurement) => {
-          // console.log(this.device['_id'] + ' ' + lastMeasurement.device);
-          if (this.device['_id'] === lastMeasurement.device) {
-
-            this.checkIfDataOutdated(lastMeasurement);
-          }
-        });
   }
 
   private checkIfDataOutdated(lastMeasurement) {
@@ -56,6 +43,12 @@ export class DetailsComponent implements OnDestroy, OnInit {
     const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
     this.outdated = diffDays > 1;
+  }
+
+  public exportMeasurements() {
+    this.measurementService.getExport(this.device._id).toPromise().then((res) => {
+      console.log(res);
+    });
   }
 
   public editName() {
@@ -116,12 +109,6 @@ export class DetailsComponent implements OnDestroy, OnInit {
           .subscribe((device) => {
             this.device = device;
           });
-
-        /*this.getLastMeasurementValue(id);
-
-        setInterval(() => {
-          this.getLastMeasurementValue(id);
-        }, 3000);*/
       });
   }
 }

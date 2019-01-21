@@ -94,6 +94,15 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
               type: 'time',
               splitLine: {
                 show: false
+              },
+              axisLabel: {
+                formatter: function(value){
+                  const date = new Date(value);
+                  return ('0' + (date.getDate())).slice(-2) + '-' +
+                    ('0' + (date.getMonth() + 1)).slice(-2) +
+                    ' ' + ('0' + (date.getHours())).slice(-2) + ':' +
+                    ('0' + (date.getMinutes())).slice(-2);
+                }
               }
             },
             yAxis: {

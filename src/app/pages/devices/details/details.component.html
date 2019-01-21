@@ -47,9 +47,6 @@
   <nb-card>
     <nb-card-header>
       Apparaat details
-      <button class="btn btn-info" (click)="exportMeasurements()">
-        <i class="nb-arrow-down"></i>
-      </button>
     </nb-card-header>
     <nb-card-body>
       <div class="row">
@@ -88,6 +85,12 @@
         <div class="col-md-4 ">
           <p class="type">Laatst Aangepast</p>
           <p class="value">{{ device.updatedAt | amLocal | amDateFormat: 'DD-MM-YYYY - HH:mm:ss'}}</p>
+        </div>
+        <div class="col-md-12 text-center">
+          <hr>
+          <a href="{{API_URL}}/measurements/{{device._id}}/export" class="btn btn-info pull-right">
+            Exporteer data
+          </a>
         </div>
       </div>
     </nb-card-body>

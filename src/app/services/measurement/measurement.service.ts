@@ -27,6 +27,10 @@ export class MeasurementService {
     return this.http.get(`${API_URL}/measurements/${deviceId}/three-days`);
   }
 
+  public getExport(deviceId): Observable<any> {
+    return this.http.get(`${API_URL}/measurements/${deviceId}/export`);
+  }
+
   /*private handleError(error: Response | any) {
     console.error('ApiService::handleError', error);
     return Observable.throw(error);
