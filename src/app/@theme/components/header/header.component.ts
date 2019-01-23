@@ -7,7 +7,7 @@ import {LayoutService} from '../../../@core/data/layout.service';
 import {NbAuthJWTToken, NbAuthService} from '@nebular/auth';
 import {filter, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {SearchService} from "../../../services/search/search.service";
+import {SearchService} from '../../../services/search/search.service';
 
 @Component({
   selector: 'ngx-header',
@@ -41,16 +41,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.searchService.onSearchSubmit()
+    /* this.searchService.onSearchSubmit()
       .subscribe((data: any) => {
-        /*this.router.navigate(['search']);
+        this.router.navigate(['search']);
         this.apiSearchService.getSearchResults(data.term).subscribe((res) => {
           console.log(res);
         }, (err) => {
           console.log(err);
-        });*/
+        });
         // this.value = data.term;
-      })
+      }) */
   }
 
   ngOnInit() {

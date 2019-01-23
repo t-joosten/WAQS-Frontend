@@ -5,7 +5,7 @@
  */
 export const environment = {
   production: true,
-  apiUrl: 'https://api.waqs.nl/api/v1',
-  socketURL: 'https://api.waqs.nl',
+  apiUrl: 'https://waterquality-backend.herokuapp.com/api/v1',
+  socketURL: 'https://waterquality-backend.herokuapp.com',
   googleMapsKey: 'AIzaSyCEuXuq20j8Ud6D-wm1rCZnp3JfjGnA19I',
 };

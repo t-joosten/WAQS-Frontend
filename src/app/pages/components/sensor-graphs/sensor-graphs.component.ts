@@ -4,7 +4,7 @@ import {EChartOption, ECharts, init} from 'echarts';
 import {Device} from '../../../models/device.model';
 import {MeasurementService} from '../../../services/measurement/measurement.service';
 import {SubstanceService} from '../../../services/substance/substance.service';
-import {Socket} from "ngx-socket-io";
+import {Socket} from 'ngx-socket-io';
 
 @Component({
   selector: 'ngx-sensor-graphs',
@@ -19,41 +19,19 @@ import {Socket} from "ngx-socket-io";
 export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() selectedDevice: Device;
   multiOptions = [];
-  // options: EChartOption = {};
   multiUpdateOptions = [];
 
   timer: any;
 
   themeSubscription: any;
 
-  multiData = [];
-
-  oneDay = 24 * 3600 * 1000;
-  fiveMinutes = 5 * 60 * 1000;
-  oneMonth = 30 * 24 * 3600 * 1000;
-  now = new Date(2018, 3, 11);
-  value = Math.random() * 4 + 18;
-
   constructor(private theme: NbThemeService, private measurementService: MeasurementService,
               private substanceService: SubstanceService, private socket: Socket) {
-  }
-
-  randomData() {
-    this.now = new Date(+this.now + this.fiveMinutes);
-    this.value = Math.random() * 4 + 18;
-    return {
-      name: this.now.toString(),
-      value: [
-        this.now,
-        Math.round(this.value)
-      ]
-    }
   }
 
   getMeasurementData(deviceId) {
     this.measurementService.getLastThreeDayMeasurements(deviceId).subscribe(
       (res) => {
-        console.log(res);
         res.forEach((measurementData) => {
           const data = [];
 
@@ -118,22 +96,6 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
           };
           this.multiOptions.push(options);
         });
-        console.log(this.multiOptions);
-
-        /*this.timer = setInterval(() => {
-
-          for (let i = 0; i < 5; i++) {
-            this.data.shift();
-            this.data.push(this.randomData());
-          }
-
-          this.updateOptions = {
-            series: [{
-              data: this.data
-            }]
-          }
-        }, 1000);*/
-        console.log(res)
       }, (err) => {
         console.log(err);
       });
@@ -141,10 +103,8 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
     this.socket.on(`device/` + deviceId + '/measurement', (newMeasurement) => {
       let index = 0;
       this.multiOptions.forEach((options) => {
-        console.log(options);
         if (options.gateId === newMeasurement.gateId) {
           let data = options.series[0].data;
-          console.log(new Date(newMeasurement.createdAt).toString());
 
           data.unshift({
             name: new Date(newMeasurement.createdAt).toString(),
@@ -153,14 +113,12 @@ export class SensorGraphsComponent implements AfterViewInit, OnDestroy, OnChange
               newMeasurement.value,
             ]
           });
-          //data.push();
 
           this.multiUpdateOptions[index] = {
             series: [{
               data
             }]
           }
-          console.log(options);
         }
         index++;
       });

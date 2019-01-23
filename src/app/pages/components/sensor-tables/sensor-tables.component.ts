@@ -50,7 +50,6 @@ export class SensorTablesComponent implements OnInit, OnChanges, OnDestroy {
         });
 
     this.socket.on(`device/` + id + '/measurement', (newMeasurement) => {
-      console.log(newMeasurement);
       let found = false;
       this.lastMeasurements.forEach((measurement) => {
         if (measurement.gateId === newMeasurement.gateId) {
