@@ -47,7 +47,6 @@ export class DetailsComponent implements OnDestroy, OnInit {
 
   public exportMeasurements() {
     this.measurementService.getExport(this.device._id).toPromise().then((res) => {
-      console.log(res);
     });
   }
 
@@ -94,7 +93,6 @@ export class DetailsComponent implements OnDestroy, OnInit {
         const id = params['id'];
 
         this.socket.on(`device/` + id, (res) => {
-          console.log(res);
           this.device.battery = res.device.battery;
           this.device.alt = res.device.alt;
           this.device.lat = res.device.lat;
